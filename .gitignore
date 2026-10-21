@@ -2,6 +2,7 @@
 build/
 bin/
 out/
+target/
 .idea/
 *.iml
 *.ipr
