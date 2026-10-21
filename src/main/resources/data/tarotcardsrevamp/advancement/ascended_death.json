@@ -1,23 +1,15 @@
-﻿{
-    "criteria":  {
-                     "ascended":  {
-                                      "trigger":  "minecraft:impossible"
-                                  }
-                 },
-    "parent":  "tarotcardsrevamp:root",
-    "display":  {
-                    "description":  {
-                                        "text":  "Awaken death into its Ascended form."
-                                    },
-                    "show_toast":  true,
-                    "icon":  {
-                                 "id":  "tarotcardsrevamp:tarot_card_death"
-                             },
-                    "hidden":  false,
-                    "announce_to_chat":  true,
-                    "title":  {
-                                  "text":  "Ascended: death"
-                              },
-                    "frame":  "goal"
-                }
+{
+  "parent": "tarotcardsrevamp:root",
+  "display": {
+    "icon": { "id": "tarotcardsrevamp:tarot_card_death" },
+    "title": { "translate": "advancements.tarotcardsrevamp.ascended_death.title" },
+    "description": { "translate": "advancements.tarotcardsrevamp.ascended_death.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "ascended": { "trigger": "minecraft:impossible" }
+  }
 }

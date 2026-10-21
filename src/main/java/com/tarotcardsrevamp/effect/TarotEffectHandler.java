@@ -3,23 +3,17 @@ package com.tarotcardsrevamp.effect;
 import com.tarotcardsrevamp.card.TarotCardItem;
 import com.tarotcardsrevamp.card.TarotCardType;
 import com.tarotcardsrevamp.compat.CuriosCompat;
-import com.tarotcardsrevamp.deck.DeckDataComponent;
 import com.tarotcardsrevamp.deck.TarotDeckItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
@@ -59,13 +53,13 @@ public class TarotEffectHandler {
         // 0 - The Fool
         if (active.isActive(TarotCardType.THE_FOOL)) {
             int amplifier = active.isAscended(TarotCardType.THE_FOOL) ? 2 : 0;
-            player.addEffect(new MobEffectInstance(MobEffects.JUMP, 40, amplifier, true, false, true));
+            player.addEffect(new MobEffectInstance(MobEffects.JUMP_BOOST, 40, amplifier, true, false, true));
         }
 
         // VII - The Chariot
         if (active.isActive(TarotCardType.THE_CHARIOT)) {
             int amplifier = active.isAscended(TarotCardType.THE_CHARIOT) ? 1 : 0;
-            player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 40, amplifier, true, false, true));
+            player.addEffect(new MobEffectInstance(MobEffects.SPEED, 40, amplifier, true, false, true));
 
             // Ascended Chariot Sprint Fluid-Walking
             if (active.isAscended(TarotCardType.THE_CHARIOT) && player.isSprinting()) {
@@ -86,10 +80,10 @@ public class TarotEffectHandler {
         if (active.isActive(TarotCardType.THE_MOON)) {
             player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 240, 0, true, false, true));
             if (active.isAscended(TarotCardType.THE_MOON)) {
-                long time = player.level().getDayTime() % 24000;
+                long time = player.level().getDefaultClockTime() % 24000;
                 boolean isNight = time >= 13000 && time <= 23000;
                 if (isNight || player.level().getRawBrightness(player.blockPosition(), 0) < 5) {
-                    player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 40, 0, true, false, true));
+                    player.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 40, 0, true, false, true));
                     player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, 0, true, false, true));
                 }
             }
@@ -104,9 +98,9 @@ public class TarotEffectHandler {
 
             for (LivingEntity target : nearby) {
                 int slownessAmp = active.isAscended(TarotCardType.THE_WORLD) ? 3 : 0;
-                target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, slownessAmp, true, false));
+                target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 40, slownessAmp, true, false));
                 if (active.isAscended(TarotCardType.THE_WORLD)) {
-                    target.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN, 40, 2, true, false));
+                    target.addEffect(new MobEffectInstance(MobEffects.MINING_FATIGUE, 40, 2, true, false));
                 }
             }
         }

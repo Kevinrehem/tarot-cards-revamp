@@ -1,23 +1,15 @@
-﻿{
-    "criteria":  {
-                     "ascended":  {
-                                      "trigger":  "minecraft:impossible"
-                                  }
-                 },
-    "parent":  "tarotcardsrevamp:root",
-    "display":  {
-                    "description":  {
-                                        "text":  "Awaken temperance into its Ascended form."
-                                    },
-                    "show_toast":  true,
-                    "icon":  {
-                                 "id":  "tarotcardsrevamp:tarot_card_temperance"
-                             },
-                    "hidden":  false,
-                    "announce_to_chat":  true,
-                    "title":  {
-                                  "text":  "Ascended: temperance"
-                              },
-                    "frame":  "goal"
-                }
+{
+  "parent": "tarotcardsrevamp:root",
+  "display": {
+    "icon": { "id": "tarotcardsrevamp:tarot_card_temperance" },
+    "title": { "translate": "advancements.tarotcardsrevamp.ascended_temperance.title" },
+    "description": { "translate": "advancements.tarotcardsrevamp.ascended_temperance.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "ascended": { "trigger": "minecraft:impossible" }
+  }
 }

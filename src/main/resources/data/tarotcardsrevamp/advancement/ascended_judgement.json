@@ -1,23 +1,15 @@
-﻿{
-    "criteria":  {
-                     "ascended":  {
-                                      "trigger":  "minecraft:impossible"
-                                  }
-                 },
-    "parent":  "tarotcardsrevamp:root",
-    "display":  {
-                    "description":  {
-                                        "text":  "Awaken judgement into its Ascended form."
-                                    },
-                    "show_toast":  true,
-                    "icon":  {
-                                 "id":  "tarotcardsrevamp:tarot_card_judgement"
-                             },
-                    "hidden":  false,
-                    "announce_to_chat":  true,
-                    "title":  {
-                                  "text":  "Ascended: judgement"
-                              },
-                    "frame":  "goal"
-                }
+{
+  "parent": "tarotcardsrevamp:root",
+  "display": {
+    "icon": { "id": "tarotcardsrevamp:tarot_card_judgement" },
+    "title": { "translate": "advancements.tarotcardsrevamp.ascended_judgement.title" },
+    "description": { "translate": "advancements.tarotcardsrevamp.ascended_judgement.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "ascended": { "trigger": "minecraft:impossible" }
+  }
 }

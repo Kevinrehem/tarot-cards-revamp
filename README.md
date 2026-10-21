@@ -1,45 +1,35 @@
 # Tarot Cards Revamp (`tarotcardsrevamp`)
 
-A modern reimagining of the classic Tarot Cards mod for **Minecraft 26.3** running on **NeoForge 26.3.0.95**.
+A reimagining of the classic Tarot Cards mod for **Minecraft 26.3** on **NeoForge 26.3.0.95** (requires **Java 25**).
+
+Each of the 22 Major Arcana cards starts at **50% strength** and has an ascension quest that unlocks a much stronger form.
 
 ---
 
-## 🌟 Features
+## Implementation status
 
-- **22 Major Arcana Tarot Cards (0 - The Fool to XXI - The World)**:
-  - Each card begins at **50% base strength**.
-  - Right-click in hand to toggle **Active / Inactive**.
-  - Active cards track in-game progression via `DataComponents` on the `ItemStack`.
-  - Upon reaching **100% of the quest goal**, the card automatically **Awakens / Ascends** into an overpowered form with enchanted glint and ascension sound effects!
-- **Ascended Powers**:
-  - **The Chariot (VII)**: Sprint across water and lava without sinking or burning!
-  - **The World (XXI)**: Creates a temporal aura inflicting Slowness IV and Mining Fatigue III on nearby enemies.
-  - **The Fool (0)**: 100% Fall damage immunity + Jump Boost III.
-  - And 19 more unique ascended abilities.
-- **Tarot Deck**:
-  - Dedicated container storing all 22 Major Arcana.
-  - Craftable via: 1 Chest (center), 4 Paper (cross), 4 Gold Nuggets (corners).
-  - Works in player inventory and has soft compatibility with the **Curios API** accessory slot.
-- **Loot & Card Recycling**:
-  - Generates in structure chests (Villages, Mineshafts, Dungeons, Temples, Strongholds, End Cities).
-  - Smart loot weighting prioritizes cards you have not yet found.
-  - Recycle **any 3 Tarot Cards** + 1 Gold Ingot into an **Unidentified Tarot Card**!
-- **Advancements**:
-  - Task: Find 1, 10, and 17 unique Tarot Cards.
-  - Goal: 22 individual advancements for each card ascended.
-  - Challenge: Master of Destiny (Collect all 22) & God of Fate (Ascend all 22).
-- **Admin Commands**:
-  - `/tarot giveall`: Grants all 22 cards and the Tarot Deck (OP level 2).
-  - `/tarot ascend_held`: Instantly completes the quest of the held card (OP level 2).
-- **Localization**:
-  - Full translations in English (`en_us`) and Brazilian Portuguese (`pt_br`).
+The mod loads and the basic items work. Most gameplay is **still in progress** — see
+[`openspec/changes/init-tarot-cards-revamp/tasks.md`](openspec/changes/init-tarot-cards-revamp/tasks.md) for the authoritative checklist.
 
----
+| Area | Status |
+|---|---|
+| 22 cards + Unidentified card + Tarot Deck items, creative tab, EN/PT-BR lang, placeholder textures | Done |
+| Right-click toggle Active/Inactive, quest tooltip, ascended glint | Done |
+| Crafting: Tarot Deck (chest center, 4 paper cross, 4 gold nuggets corners) and recycling any 3 cards + 1 gold ingot | Done |
+| `/tarot giveall`, `/tarot ascend_held` (OP level 2) | Done |
+| Buffs | Partial: The Fool, The Chariot (incl. ascended fluid sprint), The Moon, The World, The Tower |
+| Quest progress | Partial: The Star, Death, The Hanged Man |
+| Tarot Deck GUI (22 slots), persistence, auto-collect | Not started (right-click shows a "coming soon" message) |
+| Loot in structure chests | Not started |
+| Curios API slot | Not started |
+| Advancements (found 1/10/17/22, per-card ascension, all ascended) | JSON present, never granted yet |
+| Config (`TarotConfig`) | Registered, values not yet used |
 
-## 🛠️ Building & Testing
+## Building and testing
 
-Run unit tests via Maven or Gradle:
+Requires JDK 25 (configured via `org.gradle.java.installations.paths` in `gradle.properties`).
 
 ```bash
-mvn -f pom-test.xml test
+./gradlew build                 # compile + JUnit tests -> build/libs/tarotcardsrevamp-1.0.0.jar
+./gradlew runGameTestServer     # smoke test: boots registries/datapacks headless
 ```

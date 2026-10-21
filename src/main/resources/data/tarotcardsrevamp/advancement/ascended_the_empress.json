@@ -1,23 +1,15 @@
-﻿{
-    "criteria":  {
-                     "ascended":  {
-                                      "trigger":  "minecraft:impossible"
-                                  }
-                 },
-    "parent":  "tarotcardsrevamp:root",
-    "display":  {
-                    "description":  {
-                                        "text":  "Awaken the_empress into its Ascended form."
-                                    },
-                    "show_toast":  true,
-                    "icon":  {
-                                 "id":  "tarotcardsrevamp:tarot_card_the_empress"
-                             },
-                    "hidden":  false,
-                    "announce_to_chat":  true,
-                    "title":  {
-                                  "text":  "Ascended: the_empress"
-                              },
-                    "frame":  "goal"
-                }
+{
+  "parent": "tarotcardsrevamp:root",
+  "display": {
+    "icon": { "id": "tarotcardsrevamp:tarot_card_the_empress" },
+    "title": { "translate": "advancements.tarotcardsrevamp.ascended_the_empress.title" },
+    "description": { "translate": "advancements.tarotcardsrevamp.ascended_the_empress.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "ascended": { "trigger": "minecraft:impossible" }
+  }
 }

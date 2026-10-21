@@ -1,23 +1,15 @@
-﻿{
-    "criteria":  {
-                     "ascended":  {
-                                      "trigger":  "minecraft:impossible"
-                                  }
-                 },
-    "parent":  "tarotcardsrevamp:root",
-    "display":  {
-                    "description":  {
-                                        "text":  "Awaken wheel_of_fortune into its Ascended form."
-                                    },
-                    "show_toast":  true,
-                    "icon":  {
-                                 "id":  "tarotcardsrevamp:tarot_card_wheel_of_fortune"
-                             },
-                    "hidden":  false,
-                    "announce_to_chat":  true,
-                    "title":  {
-                                  "text":  "Ascended: wheel_of_fortune"
-                              },
-                    "frame":  "goal"
-                }
+{
+  "parent": "tarotcardsrevamp:root",
+  "display": {
+    "icon": { "id": "tarotcardsrevamp:tarot_card_wheel_of_fortune" },
+    "title": { "translate": "advancements.tarotcardsrevamp.ascended_wheel_of_fortune.title" },
+    "description": { "translate": "advancements.tarotcardsrevamp.ascended_wheel_of_fortune.description" },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "ascended": { "trigger": "minecraft:impossible" }
+  }
 }

@@ -1,6 +1,5 @@
 package com.tarotcardsrevamp.effect;
 
-import com.tarotcardsrevamp.advancement.PlayerTarotTracker;
 import com.tarotcardsrevamp.card.CardDataComponent;
 import com.tarotcardsrevamp.card.TarotCardItem;
 import com.tarotcardsrevamp.card.TarotCardType;
@@ -14,12 +13,12 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 
 public class TarotQuestHandler {
 
     public static void progressQuest(Player player, TarotCardType targetCard, int amount) {
-        if (player.level().isClientSide() || amount <= 0) return;
+        if (player == null || player.level().isClientSide() || amount <= 0) return;
 
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);
@@ -52,7 +51,7 @@ public class TarotQuestHandler {
     }
 
     @SubscribeEvent
-    public static void onBlockBreak(BlockEvent.BreakEvent event) {
+    public static void onBlockBreak(BreakBlockEvent event) {
         progressQuest(event.getPlayer(), TarotCardType.THE_STAR, 1);
     }
 
@@ -66,7 +65,7 @@ public class TarotQuestHandler {
     @SubscribeEvent
     public static void onLivingDamage(LivingDamageEvent.Post event) {
         if (event.getEntity() instanceof Player player) {
-            progressQuest(player, TarotCardType.THE_HANGED_MAN, (int) event.getNewDamage());
+            progressQuest(player, TarotCardType.THE_HANGED_MAN, (int) event.getInflictedDamage());
         }
     }
 }

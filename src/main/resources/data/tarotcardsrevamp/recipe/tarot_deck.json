@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "C": {
-      "item": "minecraft:chest"
-    },
-    "P": {
-      "item": "minecraft:paper"
-    },
-    "N": {
-      "item": "minecraft:gold_nugget"
-    }
+    "C": "minecraft:chest",
+    "P": "minecraft:paper",
+    "N": "minecraft:gold_nugget"
   },
   "pattern": [
     "NPN",

@@ -6,21 +6,24 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class TarotCardItem extends Item {
 
     private final TarotCardType cardType;
 
     public TarotCardItem(TarotCardType cardType, Properties properties) {
-        super(properties.stacksTo(1).component(ModDataComponents.CARD_DATA.get(), CardDataComponent.DEFAULT));
+        // No default component here: reading a DeferredHolder during the item RegisterEvent depends on registry
+        // ordering. getData() already falls back to CardDataComponent.DEFAULT when the component is absent.
+        super(properties.stacksTo(1));
         this.cardType = cardType;
     }
 
@@ -43,7 +46,7 @@ public class TarotCardItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!level.isClientSide()) {
             CardDataComponent current = getData(stack);
@@ -53,45 +56,45 @@ public class TarotCardItem extends Item {
             if (newActive) {
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
                         SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.6f, 1.2f);
-                player.displayClientMessage(Component.translatable("tarotcardsrevamp.status.active")
-                        .withStyle(ChatFormatting.GREEN), true);
+                player.sendOverlayMessage(Component.translatable("tarotcardsrevamp.status.active")
+                        .withStyle(ChatFormatting.GREEN));
             } else {
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
                         SoundEvents.DISPENSER_FAIL, SoundSource.PLAYERS, 0.5f, 0.8f);
-                player.displayClientMessage(Component.translatable("tarotcardsrevamp.status.inactive")
-                        .withStyle(ChatFormatting.RED), true);
+                player.sendOverlayMessage(Component.translatable("tarotcardsrevamp.status.inactive")
+                        .withStyle(ChatFormatting.RED));
             }
         }
-        return InteractionResultHolder.sidedSuccess(stack, level.isClientSide());
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
         CardDataComponent data = getData(stack);
         int goal = cardType.getDefaultGoal();
 
         if (data.ascended()) {
-            tooltipComponents.add(Component.translatable("tarotcardsrevamp.status.ascended")
+            tooltipAdder.accept(Component.translatable("tarotcardsrevamp.status.ascended")
                     .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
         } else {
-            tooltipComponents.add(Component.translatable("tarotcardsrevamp.status.base")
+            tooltipAdder.accept(Component.translatable("tarotcardsrevamp.status.base")
                     .withStyle(ChatFormatting.AQUA));
-            tooltipComponents.add(Component.translatable("tarotcardsrevamp.tooltip.quest",
+            tooltipAdder.accept(Component.translatable("tarotcardsrevamp.tooltip.quest",
                     data.questProgress(), goal, data.getPercent(goal))
                     .withStyle(ChatFormatting.YELLOW));
         }
 
         if (data.active()) {
-            tooltipComponents.add(Component.translatable("tarotcardsrevamp.status.active")
+            tooltipAdder.accept(Component.translatable("tarotcardsrevamp.status.active")
                     .withStyle(ChatFormatting.GREEN));
         } else {
-            tooltipComponents.add(Component.translatable("tarotcardsrevamp.status.inactive")
+            tooltipAdder.accept(Component.translatable("tarotcardsrevamp.status.inactive")
                     .withStyle(ChatFormatting.RED));
         }
 
-        tooltipComponents.add(Component.translatable("tarotcardsrevamp.tooltip.toggle_hint")
+        tooltipAdder.accept(Component.translatable("tarotcardsrevamp.tooltip.toggle_hint")
                 .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
 
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, tooltipFlag);
     }
 }

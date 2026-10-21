@@ -22,7 +22,7 @@ public class TarotCardsRevampMod {
 
     public TarotCardsRevampMod(IEventBus modEventBus, ModContainer modContainer) {
         // Register configs
-        modContainer.registerConfig(ModConfig.Type.COMMON, TarotConfig.SPEC);
+        modContainer.registerConfig(ModConfig.Type.SYNCED, TarotConfig.SPEC);
 
         // Register registries to mod event bus
         ModItems.ITEMS.register(modEventBus);

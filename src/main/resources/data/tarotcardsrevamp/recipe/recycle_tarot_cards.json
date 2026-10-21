@@ -2,18 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "tag": "tarotcardsrevamp:tarot_cards"
-    },
-    {
-      "tag": "tarotcardsrevamp:tarot_cards"
-    },
-    {
-      "tag": "tarotcardsrevamp:tarot_cards"
-    },
-    {
-      "item": "minecraft:gold_ingot"
-    }
+    "#tarotcardsrevamp:tarot_cards",
+    "#tarotcardsrevamp:tarot_cards",
+    "#tarotcardsrevamp:tarot_cards",
+    "minecraft:gold_ingot"
   ],
   "result": {
     "count": 1,

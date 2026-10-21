@@ -15,7 +15,7 @@ public class TarotCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("tarot")
-                .requires(source -> source.hasPermission(2))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.literal("giveall")
                         .executes(context -> {
                             ServerPlayer player = context.getSource().getPlayerOrException();
