@@ -3,8 +3,11 @@ package com.tarotcardsrevamp.effect;
 import com.tarotcardsrevamp.card.TarotCardItem;
 import com.tarotcardsrevamp.card.TarotCardType;
 import com.tarotcardsrevamp.compat.CuriosCompat;
+import com.tarotcardsrevamp.config.TarotConfig;
 import com.tarotcardsrevamp.deck.TarotDeckItem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -44,12 +47,101 @@ public class TarotEffectHandler {
     }
 
     @SubscribeEvent
+    public static void onPlayerTickPre(PlayerTickEvent.Pre event) {
+        Player player = event.getEntity();
+        ActiveCardResolver active = resolvePlayerActiveCards(player);
+        handleChariotFluidPhysics(player, active);
+    }
+
+    @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Post event) {
         Player player = event.getEntity();
-        if (player.level().isClientSide()) return;
-
         ActiveCardResolver active = resolvePlayerActiveCards(player);
 
+        // Client & Server: Chariot fluid physics adjustment post-movement
+        handleChariotFluidPhysics(player, active);
+
+        // Server-only: Mob effects and area-of-effect auras
+        if (!player.level().isClientSide()) {
+            applyServerEffects(player, active);
+        }
+    }
+
+    private static void handleChariotFluidPhysics(Player player, ActiveCardResolver active) {
+        if (TarotConfig.ENABLE_ASCENDED_CHARIOT_FLUID_WALK != null && !TarotConfig.ENABLE_ASCENDED_CHARIOT_FLUID_WALK.get()) {
+            return;
+        }
+
+        if (!active.isActive(TarotCardType.THE_CHARIOT) || !active.isAscended(TarotCardType.THE_CHARIOT)) {
+            return;
+        }
+
+        if (player.getAbilities().flying) {
+            return;
+        }
+
+        AABB bb = player.getBoundingBox();
+        double feetY = bb.minY;
+
+        // Check feet block and the block directly below feet
+        BlockPos feetPos = BlockPos.containing(player.getX(), feetY, player.getZ());
+        BlockPos belowFeetPos = BlockPos.containing(player.getX(), feetY - 0.2, player.getZ());
+
+        FluidState fluidAtFeet = player.level().getFluidState(feetPos);
+        FluidState fluidBelow = player.level().getFluidState(belowFeetPos);
+
+        BlockPos targetFluidPos = null;
+        FluidState targetFluid = null;
+
+        if (!fluidAtFeet.isEmpty() && (fluidAtFeet.is(FluidTags.WATER) || fluidAtFeet.is(FluidTags.LAVA))) {
+            targetFluidPos = feetPos;
+            targetFluid = fluidAtFeet;
+        } else if (!fluidBelow.isEmpty() && (fluidBelow.is(FluidTags.WATER) || fluidBelow.is(FluidTags.LAVA))) {
+            targetFluidPos = belowFeetPos;
+            targetFluid = fluidBelow;
+        }
+
+        if (targetFluid == null || targetFluidPos == null) {
+            return;
+        }
+
+        double surfaceY = targetFluidPos.getY() + Math.max(0.875, (double) targetFluid.getHeight(player.level(), targetFluidPos));
+
+        // Player is at or near the surface of the fluid
+        if (feetY <= surfaceY + 0.2 && feetY >= surfaceY - 1.2) {
+            boolean isMoving = player.isSprinting() || Math.hypot(player.getDeltaMovement().x, player.getDeltaMovement().z) > 0.05;
+
+            if (isMoving) {
+                // Ensure player doesn't sink beneath the surface
+                if (player.getY() < surfaceY) {
+                    player.setPos(player.getX(), surfaceY, player.getZ());
+                }
+
+                // Nullify downward velocity
+                Vec3 motion = player.getDeltaMovement();
+                if (motion.y < 0.0) {
+                    player.setDeltaMovement(motion.x, 0.0, motion.z);
+                }
+
+                // Keep player considered on-ground for sprinting and reset fall damage
+                player.setOnGround(true);
+                player.resetFallDistance();
+
+                // Counteract vanilla fluid sprint cancellation
+                player.setSprinting(true);
+
+                // Extinguish fire ticks
+                player.clearFire();
+
+                // Server-side fire resistance on lava
+                if (!player.level().isClientSide() && targetFluid.is(FluidTags.LAVA)) {
+                    player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 40, 0, true, false, false));
+                }
+            }
+        }
+    }
+
+    private static void applyServerEffects(Player player, ActiveCardResolver active) {
         // 0 - The Fool
         if (active.isActive(TarotCardType.THE_FOOL)) {
             int amplifier = active.isAscended(TarotCardType.THE_FOOL) ? 2 : 0;
@@ -60,20 +152,6 @@ public class TarotEffectHandler {
         if (active.isActive(TarotCardType.THE_CHARIOT)) {
             int amplifier = active.isAscended(TarotCardType.THE_CHARIOT) ? 1 : 0;
             player.addEffect(new MobEffectInstance(MobEffects.SPEED, 40, amplifier, true, false, true));
-
-            // Ascended Chariot Sprint Fluid-Walking
-            if (active.isAscended(TarotCardType.THE_CHARIOT) && player.isSprinting()) {
-                BlockPos under = player.blockPosition().below();
-                FluidState fluid = player.level().getFluidState(under);
-                if (!fluid.isEmpty()) {
-                    Vec3 delta = player.getDeltaMovement();
-                    if (delta.y < 0.0) {
-                        player.setDeltaMovement(delta.x, 0.0, delta.z);
-                        player.setOnGround(true);
-                    }
-                    player.clearFire();
-                }
-            }
         }
 
         // XVIII - The Moon
@@ -112,7 +190,7 @@ public class TarotEffectHandler {
             ActiveCardResolver active = resolvePlayerActiveCards(player);
 
             // 0 - The Fool: Fall damage reduction or immunity
-            if (event.getSource().is(net.minecraft.tags.DamageTypeTags.IS_FALL) && active.isActive(TarotCardType.THE_FOOL)) {
+            if (event.getSource().is(DamageTypeTags.IS_FALL) && active.isActive(TarotCardType.THE_FOOL)) {
                 if (active.isAscended(TarotCardType.THE_FOOL)) {
                     event.setCanceled(true);
                     return;
@@ -121,8 +199,16 @@ public class TarotEffectHandler {
                 }
             }
 
+            // VII - The Chariot: Fire/Lava/Magma damage immunity when Ascended
+            if (active.isActive(TarotCardType.THE_CHARIOT) && active.isAscended(TarotCardType.THE_CHARIOT)) {
+                if (event.getSource().is(DamageTypeTags.IS_FIRE)) {
+                    event.setCanceled(true);
+                    return;
+                }
+            }
+
             // XVI - The Tower: Explosion immunity / reduction
-            if (event.getSource().is(net.minecraft.tags.DamageTypeTags.IS_EXPLOSION) && active.isActive(TarotCardType.THE_TOWER)) {
+            if (event.getSource().is(DamageTypeTags.IS_EXPLOSION) && active.isActive(TarotCardType.THE_TOWER)) {
                 if (active.isAscended(TarotCardType.THE_TOWER)) {
                     event.setCanceled(true);
                     return;
