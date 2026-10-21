@@ -1,0 +1,23 @@
+﻿{
+    "criteria":  {
+                     "ascended":  {
+                                      "trigger":  "minecraft:impossible"
+                                  }
+                 },
+    "parent":  "tarotcardsrevamp:root",
+    "display":  {
+                    "description":  {
+                                        "text":  "Awaken the_hanged_man into its Ascended form."
+                                    },
+                    "show_toast":  true,
+                    "icon":  {
+                                 "id":  "tarotcardsrevamp:tarot_card_the_hanged_man"
+                             },
+                    "hidden":  false,
+                    "announce_to_chat":  true,
+                    "title":  {
+                                  "text":  "Ascended: the_hanged_man"
+                              },
+                    "frame":  "goal"
+                }
+}

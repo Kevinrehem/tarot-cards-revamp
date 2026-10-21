@@ -1,0 +1,23 @@
+﻿{
+    "criteria":  {
+                     "ascended":  {
+                                      "trigger":  "minecraft:impossible"
+                                  }
+                 },
+    "parent":  "tarotcardsrevamp:root",
+    "display":  {
+                    "description":  {
+                                        "text":  "Awaken strength into its Ascended form."
+                                    },
+                    "show_toast":  true,
+                    "icon":  {
+                                 "id":  "tarotcardsrevamp:tarot_card_strength"
+                             },
+                    "hidden":  false,
+                    "announce_to_chat":  true,
+                    "title":  {
+                                  "text":  "Ascended: strength"
+                              },
+                    "frame":  "goal"
+                }
+}

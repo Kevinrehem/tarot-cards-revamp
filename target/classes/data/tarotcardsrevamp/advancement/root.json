@@ -1,0 +1,30 @@
+{
+  "display": {
+    "icon": {
+      "id": "tarotcardsrevamp:unidentified_tarot_card"
+    },
+    "title": {
+      "translate": "advancements.tarotcardsrevamp.root.title"
+    },
+    "description": {
+      "translate": "advancements.tarotcardsrevamp.root.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png"
+  },
+  "criteria": {
+    "has_any_card": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#tarotcardsrevamp:tarot_cards"
+          }
+        ]
+      }
+    }
+  }
+}

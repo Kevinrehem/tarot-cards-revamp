@@ -1,0 +1,6 @@
+﻿{
+    "textures":  {
+                     "layer0":  "tarotcardsrevamp:item/tarot_card_justice"
+                 },
+    "parent":  "item/generated"
+}

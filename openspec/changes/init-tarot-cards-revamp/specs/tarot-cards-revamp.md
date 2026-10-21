@@ -33,7 +33,7 @@ resources: []
   - Legendary (`challenge`): Discover all 22 unique cards; Ascend all 22 unique cards.
 - **[RF-04]** **Tarot Deck & GUI**: Craftable with 1 Chest (center), 4 Paper (cross), and 4 Gold Nuggets (corners). Opens a 22-slot GUI where each slot corresponds to one Major Arcana card, with an Auto-Collect button and per-card toggle support. Works in player inventory and Curios slot.
 - **[RF-05]** **Ascended Chariot Fluid Sprint**: While Ascended `the_chariot` is active and the player is sprinting, the player runs across water and lava surfaces without sinking or taking lava/magma contact damage.
-- **[RF-06]** **Loot & Duplicate Recycling**: Inject cards into structure loot chests via Global Loot Modifiers with smart weighting toward undiscovered cards, and allow recycling 3 duplicate cards into an Unidentified Tarot Card.
+- **[RF-06]** **Loot & Card Recycling**: Inject cards into structure loot chests via Global Loot Modifiers with smart weighting toward undiscovered cards, and allow recycling any 3 Tarot Cards (`#tarotcardsrevamp:tarot_cards`) into an Unidentified Tarot Card.
 - **[RF-07]** **Configuration & Admin Commands**: Expose configurable quest goals, buff multipliers, and loot rates via NeoForge Config, and provide `/tarot` OP commands for testing.
 
 ## Non-Functional Requirements

@@ -1,7 +1,7 @@
 # Proposal: Init Tarot Cards Revamp
 
 > **Change ID:** `init-tarot-cards-revamp`
-> **Status:** under-review
+> **Status:** approved
 > **Author:** @jaca
 > **Created:** 2026-10-21
 > **Last Updated:** 2026-10-21
@@ -55,9 +55,9 @@ Classic Tarot Cards mods provided passive buffs when held in the inventory or Ta
   - Common (`task`): Find 1 card (root), 10 unique cards, 17 unique cards.
   - Rare (`goal`): 22 individual advancements—one for ascending each specific Arcana card.
   - Legendary (`challenge`): Find all 22 unique cards + Ascend all 22 unique cards.
-- **Loot & Duplicate Recycling**:
+- **Loot & Card Recycling**:
   - Global Loot Modifier (`TarotLootModifier`) injecting into structure chests (Villages, Mineshafts, Dungeons, Temples, Bastions, End Cities, Strongholds) with smart weighting favoring undiscovered cards.
-  - Crafting recipe to recycle 3 duplicate Tarot Cards + 1 Gold Ingot/Amethyst into an Unidentified Tarot Card that reveals a missing card (or random if all 22 are owned).
+  - Crafting recipe to recycle **any 3 Tarot Cards** (`#tarotcardsrevamp:tarot_cards`) + 1 Gold Ingot/Amethyst into an Unidentified Tarot Card that reveals a missing card (or random if all 22 are owned).
 - **Config, Commands & Assets**:
   - `TarotConfig` (NeoForge Server/Common config) for loot rates, quest targets, and buff multipliers.
   - `/tarot` command (`giveall`, `progress`, `ascend`, `reset`) requiring permission level 2.

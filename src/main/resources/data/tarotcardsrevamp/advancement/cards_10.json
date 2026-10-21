@@ -1,0 +1,23 @@
+{
+  "parent": "tarotcardsrevamp:root",
+  "display": {
+    "icon": {
+      "id": "tarotcardsrevamp:tarot_deck"
+    },
+    "title": {
+      "translate": "advancements.tarotcardsrevamp.cards_10.title"
+    },
+    "description": {
+      "translate": "advancements.tarotcardsrevamp.cards_10.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "cards_10": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

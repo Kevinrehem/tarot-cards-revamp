@@ -1,0 +1,23 @@
+﻿{
+    "criteria":  {
+                     "ascended":  {
+                                      "trigger":  "minecraft:impossible"
+                                  }
+                 },
+    "parent":  "tarotcardsrevamp:root",
+    "display":  {
+                    "description":  {
+                                        "text":  "Awaken temperance into its Ascended form."
+                                    },
+                    "show_toast":  true,
+                    "icon":  {
+                                 "id":  "tarotcardsrevamp:tarot_card_temperance"
+                             },
+                    "hidden":  false,
+                    "announce_to_chat":  true,
+                    "title":  {
+                                  "text":  "Ascended: temperance"
+                              },
+                    "frame":  "goal"
+                }
+}

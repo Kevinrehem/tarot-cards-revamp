@@ -1,0 +1,32 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="MIT"
+issueTrackerURL="https://github.com/example/tarotcardsrevamp/issues"
+
+[[mods]]
+modId="tarotcardsrevamp"
+version="1.0.0"
+displayName="Tarot Cards Revamp"
+description='''A complete reimagining of the classic Tarot Cards mod for Minecraft 26.3 NeoForge 26.3.0.95. Collect 22 Major Arcana cards, craft the 22-slot Tarot Deck, complete thematic quests to awaken ascended powers, and unlock unique advancements!'''
+authors="jaca"
+
+[[dependencies.tarotcardsrevamp]]
+modId="neoforge"
+type="required"
+versionRange="[26.3.0.95,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.tarotcardsrevamp]]
+modId="minecraft"
+type="required"
+versionRange="[26.3,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.tarotcardsrevamp]]
+modId="curios"
+type="optional"
+versionRange="[0.0,)"
+ordering="AFTER"
+side="BOTH"

@@ -1,0 +1,9 @@
+com\tarotcardsrevamp\effect\ActiveCardStatus.class
+com\tarotcardsrevamp\loot\SmartCardSelector.class
+com\tarotcardsrevamp\card\TarotCardType$QuestType.class
+com\tarotcardsrevamp\effect\ActiveCardResolver.class
+com\tarotcardsrevamp\card\CardDataComponent.class
+com\tarotcardsrevamp\deck\DeckDataComponent$DeckSlotEntry.class
+com\tarotcardsrevamp\advancement\PlayerTarotTracker.class
+com\tarotcardsrevamp\card\TarotCardType.class
+com\tarotcardsrevamp\deck\DeckDataComponent.class

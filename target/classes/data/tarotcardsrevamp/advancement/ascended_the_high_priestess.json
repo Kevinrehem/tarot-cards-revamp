@@ -1,0 +1,23 @@
+﻿{
+    "criteria":  {
+                     "ascended":  {
+                                      "trigger":  "minecraft:impossible"
+                                  }
+                 },
+    "parent":  "tarotcardsrevamp:root",
+    "display":  {
+                    "description":  {
+                                        "text":  "Awaken the_high_priestess into its Ascended form."
+                                    },
+                    "show_toast":  true,
+                    "icon":  {
+                                 "id":  "tarotcardsrevamp:tarot_card_the_high_priestess"
+                             },
+                    "hidden":  false,
+                    "announce_to_chat":  true,
+                    "title":  {
+                                  "text":  "Ascended: the_high_priestess"
+                              },
+                    "frame":  "goal"
+                }
+}

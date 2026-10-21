@@ -1,0 +1,23 @@
+﻿{
+    "criteria":  {
+                     "ascended":  {
+                                      "trigger":  "minecraft:impossible"
+                                  }
+                 },
+    "parent":  "tarotcardsrevamp:root",
+    "display":  {
+                    "description":  {
+                                        "text":  "Awaken the_magician into its Ascended form."
+                                    },
+                    "show_toast":  true,
+                    "icon":  {
+                                 "id":  "tarotcardsrevamp:tarot_card_the_magician"
+                             },
+                    "hidden":  false,
+                    "announce_to_chat":  true,
+                    "title":  {
+                                  "text":  "Ascended: the_magician"
+                              },
+                    "frame":  "goal"
+                }
+}
