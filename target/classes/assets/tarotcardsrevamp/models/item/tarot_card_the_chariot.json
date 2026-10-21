@@ -1,6 +1,0 @@
-﻿{
-    "textures":  {
-                     "layer0":  "tarotcardsrevamp:item/tarot_card_the_chariot"
-                 },
-    "parent":  "item/generated"
-}

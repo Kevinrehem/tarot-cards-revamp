@@ -1,6 +1,0 @@
-﻿{
-    "textures":  {
-                     "layer0":  "tarotcardsrevamp:item/tarot_card_wheel_of_fortune"
-                 },
-    "parent":  "item/generated"
-}
