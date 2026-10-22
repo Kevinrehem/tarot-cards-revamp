@@ -71,8 +71,10 @@ public class TarotDeckItem extends Item {
         }
 
         if (!level.isClientSide()) {
-            player.sendOverlayMessage(Component.translatable("tarotcardsrevamp.gui.deck.coming_soon")
-                    .withStyle(ChatFormatting.YELLOW));
+            player.openMenu(new net.minecraft.world.SimpleMenuProvider(
+                    (containerId, playerInv, p) -> new TarotDeckMenu(containerId, playerInv, thisStack),
+                    Component.translatable("tarotcardsrevamp.gui.deck.title")
+            ));
         }
         return InteractionResult.SUCCESS;
     }

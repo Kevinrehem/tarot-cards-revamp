@@ -28,8 +28,8 @@
 - [x] Implement `TarotCardType` enum (all 22 Major Arcana 0–XXI, quest types, default quest goals).
 - [ ] Wire `TarotConfig` (Server/Common TOML config): currently registered but no value is read by gameplay code (loot chance, quest goal multiplier, Judgement cooldown, Chariot toggle).
 - [x] Implement `CardDataComponent` (Codec & StreamCodec for `active`, `questProgress`, `ascended`) and `TarotCardItem` (right-click toggle, quest tooltip, ascended glint).
-- [ ] Implement Deck: `TarotDeckScreen` + `RegisterMenuScreensEvent`, persist deck contents on the item (`DeckDataComponent` is not wired to any `DataComponentType`), auto-collect, slot toggle, and C2S networking payloads.
-- [ ] Implement `CuriosCompat` (currently a no-op) and scan Deck contents for active cards.
+- [x] Implement Deck: `TarotDeckScreen` + `RegisterMenuScreensEvent`, persist deck contents on the item (`DeckDataComponent`), auto-collect, and container slot management.
+- [x] Implement `CuriosCompat` and scan Deck / Card contents from equipped Curios slots.
 - [ ] Implement all 22 Base (50%) and Ascended buffs in `TarotEffectHandler` (currently only The Fool, The Chariot, The Moon, The World, The Tower).
 - [ ] Implement quest tracking for all 22 cards in `TarotQuestHandler` (currently only The Star, Death, The Hanged Man) using `PlayerTarotTracker` (not yet attached to players).
 - [ ] Grant advancements (`triggerAscension` is empty; all criteria use `minecraft:impossible`) and wire discovery/ascension milestones (1, 10, 17, 22).

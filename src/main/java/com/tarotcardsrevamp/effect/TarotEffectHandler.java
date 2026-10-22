@@ -4,13 +4,18 @@ import com.tarotcardsrevamp.card.TarotCardItem;
 import com.tarotcardsrevamp.card.TarotCardType;
 import com.tarotcardsrevamp.compat.CuriosCompat;
 import com.tarotcardsrevamp.config.TarotConfig;
+import com.tarotcardsrevamp.deck.DeckDataComponent;
 import com.tarotcardsrevamp.deck.TarotDeckItem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.FluidState;
@@ -23,6 +28,8 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import java.util.List;
 
 public class TarotEffectHandler {
+
+    public static final Identifier SUN_HEALTH_MODIFIER_ID = Identifier.fromNamespaceAndPath("tarotcardsrevamp", "the_sun_max_health");
 
     public static ActiveCardResolver resolvePlayerActiveCards(Player player) {
         ActiveCardResolver resolver = new ActiveCardResolver();
@@ -174,6 +181,9 @@ public class TarotEffectHandler {
             }
         }
 
+        // XIX - The Sun: Max Health, Solar Regeneration & Fire Shield
+        handleSunHealth(player, active);
+
         // XXI - The World (Temporal Aura)
         if (active.isActive(TarotCardType.THE_WORLD)) {
             double radius = active.isAscended(TarotCardType.THE_WORLD) ? 8.0 : 4.0;
@@ -214,6 +224,14 @@ public class TarotEffectHandler {
                 }
             }
 
+            // XIX - The Sun: Fire immunity when Ascended
+            if (active.isActive(TarotCardType.THE_SUN) && active.isAscended(TarotCardType.THE_SUN)) {
+                if (event.getSource().is(DamageTypeTags.IS_FIRE)) {
+                    event.setCanceled(true);
+                    return;
+                }
+            }
+
             // XVI - The Tower: Explosion immunity / reduction
             if (event.getSource().is(DamageTypeTags.IS_EXPLOSION) && active.isActive(TarotCardType.THE_TOWER)) {
                 if (active.isAscended(TarotCardType.THE_TOWER)) {
@@ -221,6 +239,44 @@ public class TarotEffectHandler {
                     return;
                 } else {
                     event.setAmount(event.getAmount() * 0.75f);
+                }
+            }
+        }
+    }
+
+    private static void handleSunHealth(Player player, ActiveCardResolver active) {
+        AttributeInstance maxHealthAttr = player.getAttribute(Attributes.MAX_HEALTH);
+        if (maxHealthAttr == null) return;
+
+        double desiredBonus = 0.0;
+        if (active.isActive(TarotCardType.THE_SUN)) {
+            desiredBonus = active.isAscended(TarotCardType.THE_SUN) ? 20.0 : 4.0;
+        }
+
+        AttributeModifier current = maxHealthAttr.getModifier(SUN_HEALTH_MODIFIER_ID);
+        if (desiredBonus > 0.0) {
+            if (current == null || current.amount() != desiredBonus) {
+                maxHealthAttr.removeModifier(SUN_HEALTH_MODIFIER_ID);
+                maxHealthAttr.addPermanentModifier(new AttributeModifier(SUN_HEALTH_MODIFIER_ID, desiredBonus, AttributeModifier.Operation.ADD_VALUE));
+            }
+
+            // Passive sunlight regeneration
+            long time = player.level().getDefaultClockTime() % 24000;
+            boolean isDay = time < 13000 || time > 23000;
+            if (isDay && player.level().canSeeSky(player.blockPosition())) {
+                player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 40, 0, true, false, true));
+            }
+
+            // Ascended fire resistance shield
+            if (active.isAscended(TarotCardType.THE_SUN) && (player.isOnFire() || player.isInLava())) {
+                player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 200, 0, true, false, true));
+                player.clearFire();
+            }
+        } else {
+            if (current != null) {
+                maxHealthAttr.removeModifier(SUN_HEALTH_MODIFIER_ID);
+                if (player.getHealth() > player.getMaxHealth()) {
+                    player.setHealth(player.getMaxHealth());
                 }
             }
         }

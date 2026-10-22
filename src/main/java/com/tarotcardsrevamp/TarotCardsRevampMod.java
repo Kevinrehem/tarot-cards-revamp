@@ -30,6 +30,9 @@ public class TarotCardsRevampMod {
         ModMenuTypes.MENU_TYPES.register(modEventBus);
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
 
+        // Client events
+        modEventBus.addListener(com.tarotcardsrevamp.client.ClientModEvents::onRegisterMenuScreens);
+
         // Register gameplay event listeners to NeoForge game event bus
         NeoForge.EVENT_BUS.register(TarotEffectHandler.class);
         NeoForge.EVENT_BUS.register(TarotQuestHandler.class);

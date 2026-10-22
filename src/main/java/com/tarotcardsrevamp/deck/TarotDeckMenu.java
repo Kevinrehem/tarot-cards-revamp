@@ -1,8 +1,12 @@
 package com.tarotcardsrevamp.deck;
 
+import com.tarotcardsrevamp.card.CardDataComponent;
 import com.tarotcardsrevamp.card.TarotCardItem;
 import com.tarotcardsrevamp.card.TarotCardType;
+import com.tarotcardsrevamp.core.ModItems;
 import com.tarotcardsrevamp.core.ModMenuTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -44,7 +48,27 @@ public class TarotDeckMenu extends AbstractContainerMenu {
                 public int getMaxStackSize() {
                     return 1;
                 }
+
+                @Override
+                public void setChanged() {
+                    super.setChanged();
+                    saveDeckContents();
+                }
             });
+        }
+
+        // Populate deck container from deckStack if on server
+        if (!deckStack.isEmpty()) {
+            DeckDataComponent deckData = TarotDeckItem.getData(deckStack);
+            for (int i = 0; i < DeckDataComponent.TOTAL_SLOTS; i++) {
+                DeckDataComponent.DeckSlotEntry entry = deckData.getSlot(i);
+                if (entry.present()) {
+                    TarotCardType type = TarotCardType.values()[i];
+                    ItemStack cardStack = new ItemStack(ModItems.getCardItem(type));
+                    TarotCardItem.setData(cardStack, new CardDataComponent(entry.active(), entry.questProgress(), entry.ascended()));
+                    this.deckContainer.setItem(i, cardStack);
+                }
+            }
         }
 
         // Player main inventory (3 rows of 9)
@@ -58,6 +82,61 @@ public class TarotDeckMenu extends AbstractContainerMenu {
         for (int col = 0; col < 9; ++col) {
             this.addSlot(new Slot(playerInventory, col, 26 + col * 18, 128));
         }
+    }
+
+    public void saveDeckContents() {
+        if (deckStack == null || deckStack.isEmpty()) return;
+
+        DeckDataComponent deck = new DeckDataComponent();
+        for (int i = 0; i < DeckDataComponent.TOTAL_SLOTS; i++) {
+            ItemStack stack = deckContainer.getItem(i);
+            if (!stack.isEmpty() && stack.getItem() instanceof TarotCardItem cardItem) {
+                CardDataComponent cardData = TarotCardItem.getData(stack);
+                deck = deck.withSlot(cardItem.getCardType().ordinal(),
+                        new DeckDataComponent.DeckSlotEntry(true, cardData.active(), cardData.questProgress(), cardData.ascended()));
+            }
+        }
+        TarotDeckItem.setData(deckStack, deck);
+    }
+
+    @Override
+    public boolean clickMenuButton(Player player, int id) {
+        if (id == 0) { // Auto-Collect action
+            boolean anyCollected = false;
+            for (int i = DeckDataComponent.TOTAL_SLOTS; i < this.slots.size(); i++) {
+                Slot invSlot = this.slots.get(i);
+                ItemStack invStack = invSlot.getItem();
+                if (!invStack.isEmpty() && invStack.getItem() instanceof TarotCardItem cardItem) {
+                    int targetSlot = cardItem.getCardType().ordinal();
+                    Slot deckSlot = this.slots.get(targetSlot);
+                    if (!deckSlot.hasItem()) {
+                        deckSlot.set(invStack.split(1));
+                        deckSlot.setChanged();
+                        invSlot.setChanged();
+                        anyCollected = true;
+                    }
+                }
+            }
+            if (anyCollected) {
+                saveDeckContents();
+                player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
+                        SoundEvents.BUNDLE_INSERT, SoundSource.PLAYERS, 0.8f, 1.2f);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void slotsChanged(Container container) {
+        super.slotsChanged(container);
+        saveDeckContents();
+    }
+
+    @Override
+    public void removed(Player player) {
+        super.removed(player);
+        saveDeckContents();
     }
 
     @Override
@@ -96,6 +175,8 @@ public class TarotDeckMenu extends AbstractContainerMenu {
             } else {
                 slot.setChanged();
             }
+
+            saveDeckContents();
         }
 
         return itemstack;
