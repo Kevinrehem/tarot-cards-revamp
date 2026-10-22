@@ -185,4 +185,37 @@ public class TarotCardLogicTest {
         assertEquals(DeckDataComponent.DeckSlotEntry.EMPTY, deck.getSlot(-1));
         assertEquals(DeckDataComponent.DeckSlotEntry.EMPTY, deck.getSlot(50));
     }
+
+    @Test
+    @DisplayName("TP-05: Tarot Deck counts cards and upgrades Base slot to Ascended slot cleanly")
+    void testDeckSlotUpgradeAndCount() {
+        DeckDataComponent deck = new DeckDataComponent();
+        assertEquals(0, deck.getCardCount());
+        assertEquals(0, deck.getAscendedCount());
+
+        // Insert Base Chariot
+        deck = deck.withSlot(TarotCardType.THE_CHARIOT.ordinal(),
+                new DeckDataComponent.DeckSlotEntry(true, true, 200, false));
+        assertEquals(1, deck.getCardCount());
+        assertEquals(0, deck.getAscendedCount());
+        assertTrue(deck.contains(TarotCardType.THE_CHARIOT));
+
+        // Upgrade to Ascended Chariot
+        deck = deck.withSlot(TarotCardType.THE_CHARIOT.ordinal(),
+                new DeckDataComponent.DeckSlotEntry(true, true, 10000, true));
+        assertEquals(1, deck.getCardCount());
+        assertEquals(1, deck.getAscendedCount());
+        assertTrue(deck.getSlot(TarotCardType.THE_CHARIOT).ascended());
+
+        // Test offering into ActiveCardResolver
+        ActiveCardResolver resolver = new ActiveCardResolver();
+        for (int s = 0; s < DeckDataComponent.TOTAL_SLOTS; s++) {
+            var entry = deck.getSlot(s);
+            if (entry.present()) {
+                resolver.offer(TarotCardType.values()[s], entry.active(), entry.ascended(), entry.questProgress());
+            }
+        }
+        assertTrue(resolver.isActive(TarotCardType.THE_CHARIOT));
+        assertTrue(resolver.isAscended(TarotCardType.THE_CHARIOT));
+    }
 }

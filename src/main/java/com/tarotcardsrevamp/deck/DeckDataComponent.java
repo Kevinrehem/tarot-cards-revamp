@@ -1,6 +1,7 @@
 package com.tarotcardsrevamp.deck;
 
 import com.tarotcardsrevamp.card.TarotCardType;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -15,6 +16,8 @@ public class DeckDataComponent {
     public record DeckSlotEntry(boolean present, boolean active, int questProgress, boolean ascended) {
         public static final DeckSlotEntry EMPTY = new DeckSlotEntry(false, true, 0, false);
     }
+
+    public static final DeckDataComponent DEFAULT = new DeckDataComponent();
 
     private final DeckSlotEntry[] slots;
 
@@ -93,5 +96,21 @@ public class DeckDataComponent {
         if (type == null) return false;
         DeckSlotEntry entry = getSlot(type.ordinal());
         return entry != null && entry.present();
+    }
+
+    public DeckSlotEntry[] getSlots() {
+        return Arrays.copyOf(this.slots, TOTAL_SLOTS);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DeckDataComponent that)) return false;
+        return Arrays.equals(slots, that.slots);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(slots);
     }
 }

@@ -76,9 +76,21 @@ public class TarotCardItem extends Item {
         if (data.ascended()) {
             tooltipAdder.accept(Component.translatable("tarotcardsrevamp.status.ascended")
                     .withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
+            tooltipAdder.accept(Component.translatable("tarotcardsrevamp.tooltip.ascended_power_label")
+                    .withStyle(ChatFormatting.GOLD)
+                    .append(Component.translatable("tarotcardsrevamp.card." + cardType.getId() + ".desc.ascended")
+                            .withStyle(ChatFormatting.YELLOW)));
         } else {
             tooltipAdder.accept(Component.translatable("tarotcardsrevamp.status.base")
                     .withStyle(ChatFormatting.AQUA));
+            tooltipAdder.accept(Component.translatable("tarotcardsrevamp.tooltip.buff_label")
+                    .withStyle(ChatFormatting.BLUE)
+                    .append(Component.translatable("tarotcardsrevamp.card." + cardType.getId() + ".desc.base")
+                            .withStyle(ChatFormatting.GRAY)));
+            tooltipAdder.accept(Component.translatable("tarotcardsrevamp.tooltip.ascended_power_label")
+                    .withStyle(ChatFormatting.DARK_PURPLE)
+                    .append(Component.translatable("tarotcardsrevamp.card." + cardType.getId() + ".desc.ascended")
+                            .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC)));
             tooltipAdder.accept(Component.translatable("tarotcardsrevamp.tooltip.quest",
                     data.questProgress(), goal, data.getPercent(goal))
                     .withStyle(ChatFormatting.YELLOW));

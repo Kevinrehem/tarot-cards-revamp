@@ -36,7 +36,14 @@ public class TarotEffectHandler {
                 var data = TarotCardItem.getData(stack);
                 resolver.offer(cardItem.getCardType(), data.active(), data.ascended(), data.questProgress());
             } else if (stack.getItem() instanceof TarotDeckItem) {
-                // Inspect deck components if present
+                var deck = TarotDeckItem.getData(stack);
+                for (int s = 0; s < com.tarotcardsrevamp.deck.DeckDataComponent.TOTAL_SLOTS; s++) {
+                    var entry = deck.getSlot(s);
+                    if (entry.present()) {
+                        TarotCardType cardType = TarotCardType.values()[s];
+                        resolver.offer(cardType, entry.active(), entry.ascended(), entry.questProgress());
+                    }
+                }
             }
         }
 
