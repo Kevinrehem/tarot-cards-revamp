@@ -3,12 +3,12 @@
   "category": "misc",
   "key": {
     "G": "minecraft:gold_ingot",
-    "S": "#minecraft:wooden_slabs"
+    "L": "#minecraft:logs"
   },
   "pattern": [
     "GG",
-    "SS",
-    "SS"
+    "LL",
+    "LL"
   ],
   "result": {
     "count": 1,
