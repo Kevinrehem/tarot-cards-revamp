@@ -25,10 +25,12 @@ public class TarotCardsRevampMod {
         modContainer.registerConfig(ModConfig.Type.SYNCED, TarotConfig.SPEC);
 
         // Register registries to mod event bus
+        com.tarotcardsrevamp.core.ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModDataComponents.DATA_COMPONENT_TYPES.register(modEventBus);
         ModMenuTypes.MENU_TYPES.register(modEventBus);
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
+        com.tarotcardsrevamp.core.ModLootModifiers.GLOBAL_LOOT_MODIFIER_SERIALIZERS.register(modEventBus);
 
         // Client events
         modEventBus.addListener(com.tarotcardsrevamp.client.ClientModEvents::onRegisterMenuScreens);

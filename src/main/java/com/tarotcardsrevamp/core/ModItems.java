@@ -25,6 +25,9 @@ public class ModItems {
     public static final DeferredItem<UnidentifiedTarotCardItem> UNIDENTIFIED_TAROT_CARD =
             ITEMS.registerItem("unidentified_tarot_card", UnidentifiedTarotCardItem::new);
 
+    public static final DeferredItem<net.minecraft.world.item.BlockItem> DIVINATION_TABLE =
+            ITEMS.registerItem("divination_table", properties -> new net.minecraft.world.item.BlockItem(ModBlocks.DIVINATION_TABLE.get(), properties));
+
     private static final Map<TarotCardType, DeferredItem<TarotCardItem>> CARD_ITEMS = new EnumMap<>(TarotCardType.class);
 
     static {

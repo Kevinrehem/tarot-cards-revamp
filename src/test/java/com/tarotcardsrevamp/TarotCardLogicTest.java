@@ -218,4 +218,64 @@ public class TarotCardLogicTest {
         assertTrue(resolver.isActive(TarotCardType.THE_CHARIOT));
         assertTrue(resolver.isAscended(TarotCardType.THE_CHARIOT));
     }
+
+    @Test
+    @DisplayName("TP-06: LootProbabilityHelper calculates exact tiered probability boundaries")
+    void testLootModifierTieredProbabilityBoundaries() {
+        double c1 = 0.25;
+        double c2 = 0.10;
+        double c3 = 0.01;
+
+        // 3 cards (< 0.01)
+        assertEquals(3, com.tarotcardsrevamp.loot.LootProbabilityHelper.calculateCardCount(0.0000, c1, c2, c3));
+        assertEquals(3, com.tarotcardsrevamp.loot.LootProbabilityHelper.calculateCardCount(0.0099, c1, c2, c3));
+
+        // 2 cards (0.01 <= roll < 0.11)
+        assertEquals(2, com.tarotcardsrevamp.loot.LootProbabilityHelper.calculateCardCount(0.0100, c1, c2, c3));
+        assertEquals(2, com.tarotcardsrevamp.loot.LootProbabilityHelper.calculateCardCount(0.1099, c1, c2, c3));
+
+        // 1 card (0.11 <= roll < 0.36)
+        assertEquals(1, com.tarotcardsrevamp.loot.LootProbabilityHelper.calculateCardCount(0.1100, c1, c2, c3));
+        assertEquals(1, com.tarotcardsrevamp.loot.LootProbabilityHelper.calculateCardCount(0.3599, c1, c2, c3));
+
+        // 0 cards (roll >= 0.36)
+        assertEquals(0, com.tarotcardsrevamp.loot.LootProbabilityHelper.calculateCardCount(0.3600, c1, c2, c3));
+        assertEquals(0, com.tarotcardsrevamp.loot.LootProbabilityHelper.calculateCardCount(0.9999, c1, c2, c3));
+    }
+
+    @Test
+    @DisplayName("TP-07: LootProbabilityHelper Monte Carlo simulation matches requested 25% / 10% / 1% distribution")
+    void testLootModifierMonteCarloDistribution() {
+        double c1 = 0.25;
+        double c2 = 0.10;
+        double c3 = 0.01;
+        int trials = 100_000;
+        int count3 = 0;
+        int count2 = 0;
+        int count1 = 0;
+        int count0 = 0;
+
+        Random random = new Random(42);
+        for (int i = 0; i < trials; i++) {
+            float roll = random.nextFloat();
+            int count = com.tarotcardsrevamp.loot.LootProbabilityHelper.calculateCardCount(roll, c1, c2, c3);
+            switch (count) {
+                case 3 -> count3++;
+                case 2 -> count2++;
+                case 1 -> count1++;
+                case 0 -> count0++;
+                default -> fail("Unexpected card count: " + count);
+            }
+        }
+
+        double pct3 = (double) count3 / trials;
+        double pct2 = (double) count2 / trials;
+        double pct1 = (double) count1 / trials;
+        double pct0 = (double) count0 / trials;
+
+        assertEquals(0.01, pct3, 0.005, "3 cards must occur with ~1% frequency");
+        assertEquals(0.10, pct2, 0.005, "2 cards must occur with ~10% frequency");
+        assertEquals(0.25, pct1, 0.005, "1 card must occur with ~25% frequency");
+        assertEquals(0.64, pct0, 0.005, "0 cards must occur with ~64% frequency");
+    }
 }

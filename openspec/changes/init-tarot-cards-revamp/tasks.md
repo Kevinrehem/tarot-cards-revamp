@@ -33,7 +33,9 @@
 - [ ] Implement all 22 Base (50%) and Ascended buffs in `TarotEffectHandler` (currently only The Fool, The Chariot, The Moon, The World, The Tower).
 - [ ] Implement quest tracking for all 22 cards in `TarotQuestHandler` (currently only The Star, Death, The Hanged Man) using `PlayerTarotTracker` (not yet attached to players).
 - [ ] Grant advancements (`triggerAscension` is empty; all criteria use `minecraft:impossible`) and wire discovery/ascension milestones (1, 10, 17, 22).
-- [ ] Implement Global Loot Modifier (`TarotLootModifier` + GLM JSON) for structure chests with smart weighting (`SmartCardSelector` exists but is unused by loot).
+- [x] Implement Global Loot Modifier (`TarotLootModifier` + GLM JSON) for structure chests with tiered probabilities (25% for 1, 10% for 2, 1% for 3 cards) and config wiring.
+- [x] Implement Divination Table block (`ModBlocks.DIVINATION_TABLE`), block item, 12/16 voxel shape, and crafting recipe (2 gold ingots on top, 4 wooden slabs on bottom).
+- [x] Implement Divination Table GUI/Menu (`DivinationMenu`, `DivinationScreen`) for identifying cards with `SmartCardSelector` player-discovery bias, particle effects and sound.
 - [ ] Complete `/tarot` admin command (`giveall` and `ascend_held` exist; `progress` and `reset` missing).
 - [x] Generate 16x16 placeholder textures for the 22 cards, Unidentified card and Deck, item models, and `en_us.json`/`pt_br.json`.
 - [x] Replace placeholder textures with final art and add the Ascended visual overlay.

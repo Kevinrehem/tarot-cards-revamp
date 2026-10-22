@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": "minecraft:gold_ingot",
+    "S": "#minecraft:wooden_slabs"
+  },
+  "pattern": [
+    "GG",
+    "SS",
+    "SS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tarotcardsrevamp:divination_table"
+  }
+}

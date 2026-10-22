@@ -10,6 +10,9 @@ public class TarotConfig {
 
     public static final ModConfigSpec SPEC;
     public static final ModConfigSpec.DoubleValue LOOT_CHEST_CHANCE;
+    public static final ModConfigSpec.DoubleValue CHANCE_1_CARD;
+    public static final ModConfigSpec.DoubleValue CHANCE_2_CARDS;
+    public static final ModConfigSpec.DoubleValue CHANCE_3_CARDS;
     public static final ModConfigSpec.DoubleValue SMART_LOOT_BIAS;
     public static final ModConfigSpec.DoubleValue QUEST_GOAL_MULTIPLIER;
     public static final ModConfigSpec.BooleanValue ENABLE_ASCENDED_CHARIOT_FLUID_WALK;
@@ -20,8 +23,17 @@ public class TarotConfig {
 
         builder.push("loot");
         LOOT_CHEST_CHANCE = builder
-                .comment("Base probability (0.0 to 1.0) of finding a Tarot Card in structure loot chests.")
+                .comment("Legacy base probability (0.0 to 1.0) of finding a Tarot Card in structure loot chests.")
                 .defineInRange("lootChestChance", 0.35, 0.0, 1.0);
+        CHANCE_1_CARD = builder
+                .comment("Probability (0.0 to 1.0) of finding 1 Unidentified Tarot Card in a chest (default 25%).")
+                .defineInRange("chance1Card", 0.25, 0.0, 1.0);
+        CHANCE_2_CARDS = builder
+                .comment("Probability (0.0 to 1.0) of finding 2 Unidentified Tarot Cards in a chest (default 10%).")
+                .defineInRange("chance2Cards", 0.10, 0.0, 1.0);
+        CHANCE_3_CARDS = builder
+                .comment("Probability (0.0 to 1.0) of finding 3 Unidentified Tarot Cards in a chest (default 1%).")
+                .defineInRange("chance3Cards", 0.01, 0.0, 1.0);
         SMART_LOOT_BIAS = builder
                 .comment("Probability (0.0 to 1.0) of prioritizing undiscovered cards when a chest generates tarot loot.")
                 .defineInRange("smartLootBias", 0.80, 0.0, 1.0);

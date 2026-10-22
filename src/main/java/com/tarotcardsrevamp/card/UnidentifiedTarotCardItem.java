@@ -30,7 +30,8 @@ public class UnidentifiedTarotCardItem extends Item {
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack held = player.getItemInHand(hand);
         if (!level.isClientSide()) {
-            TarotCardType chosen = SELECTOR.pickCard(null);
+            var tracker = com.tarotcardsrevamp.loot.PlayerCardScanner.scanPlayerCards(player);
+            TarotCardType chosen = SELECTOR.pickCard(tracker);
             ItemStack revealed = new ItemStack(ModItems.getCardItem(chosen));
 
             held.shrink(1);

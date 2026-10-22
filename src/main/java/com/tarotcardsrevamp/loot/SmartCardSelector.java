@@ -2,12 +2,15 @@ package com.tarotcardsrevamp.loot;
 
 import com.tarotcardsrevamp.advancement.PlayerTarotTracker;
 import com.tarotcardsrevamp.card.TarotCardType;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
 /**
  * Smart card picker that selects loot with weighting towards cards the player has not yet discovered.
+ * Pure Java POJO to ensure fast, dependency-free unit testing.
  */
 public class SmartCardSelector {
 
@@ -40,15 +43,27 @@ public class SmartCardSelector {
         }
 
         if (missing.isEmpty()) {
-            // Player already found all 22 cards, return random
             return all[random.nextInt(all.length)];
         }
 
-        // 80% chance to prioritize undiscovered cards
         if (random.nextFloat() < 0.80f || missing.size() == all.length) {
             return missing.get(random.nextInt(missing.size()));
+        } else {
+            return all[random.nextInt(all.length)];
         }
+    }
 
-        return all[random.nextInt(all.length)];
+    /**
+     * Overload taking a collection of already discovered cards.
+     */
+    public TarotCardType pickCardFromDiscovered(Collection<TarotCardType> discovered) {
+        if (discovered == null || discovered.isEmpty()) {
+            return pickCard((PlayerTarotTracker) null);
+        }
+        PlayerTarotTracker tracker = new PlayerTarotTracker();
+        for (TarotCardType type : discovered) {
+            tracker.discover(type);
+        }
+        return pickCard(tracker);
     }
 }

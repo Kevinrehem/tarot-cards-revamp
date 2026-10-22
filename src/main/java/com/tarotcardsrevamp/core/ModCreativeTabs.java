@@ -19,6 +19,7 @@ public class ModCreativeTabs {
                     .icon(() -> new ItemStack(ModItems.TAROT_DECK.get()))
                     .displayItems((parameters, output) -> {
                         output.accept(ModItems.TAROT_DECK.get());
+                        output.accept(ModItems.DIVINATION_TABLE.get());
                         output.accept(ModItems.UNIDENTIFIED_TAROT_CARD.get());
                         for (TarotCardType type : TarotCardType.values()) {
                             output.accept(ModItems.getCardItem(type));

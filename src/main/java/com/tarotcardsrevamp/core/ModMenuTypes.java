@@ -14,4 +14,7 @@ public class ModMenuTypes {
 
     public static final DeferredHolder<MenuType<?>, MenuType<TarotDeckMenu>> TAROT_DECK_MENU =
             MENU_TYPES.register("tarot_deck_menu", () -> new MenuType<>(TarotDeckMenu::new, FeatureFlags.DEFAULT_FLAGS));
+
+    public static final DeferredHolder<MenuType<?>, MenuType<com.tarotcardsrevamp.block.menu.DivinationMenu>> DIVINATION_MENU =
+            MENU_TYPES.register("divination_menu", () -> new MenuType<>(com.tarotcardsrevamp.block.menu.DivinationMenu::new, FeatureFlags.DEFAULT_FLAGS));
 }
