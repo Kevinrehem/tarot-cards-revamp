@@ -40,7 +40,7 @@ public class TarotLootModifier extends LootModifier {
         if (context == null) return generatedLoot;
 
         Identifier tableId = context.getQueriedLootTableId();
-        if (tableId != null && !tableId.getPath().startsWith("chests/")) {
+        if (tableId != null && !tableId.getPath().startsWith("chests/") && !tableId.getPath().contains("chest")) {
             // Only inject into chest loot tables
             return generatedLoot;
         }

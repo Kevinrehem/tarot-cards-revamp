@@ -1,7 +1,8 @@
 {
     "item.tarotcardsrevamp.tarot_deck": "Deck de Tarot",
     "item.tarotcardsrevamp.unidentified_tarot_card": "Carta de Tarot Nao Identificada",
-    "item.tarotcardsrevamp.unidentified_tarot_card.desc": "Clique com o botao direito para revelar uma Carta de Tarot!",
+    "item.tarotcardsrevamp.unidentified_tarot_card.desc": "Coloque em uma Mesa de Divinacao para revelar seus Arcanos.",
+    "tarotcardsrevamp.message.use_divination_table": "Leve esta carta a uma Mesa de Divinacao para revelar seus segredos!",
     "item.tarotcardsrevamp.divination_table": "Mesa de Divinacao",
     "block.tarotcardsrevamp.divination_table": "Mesa de Divinacao",
     "container.tarotcardsrevamp.divination_table": "Mesa de Divinacao",

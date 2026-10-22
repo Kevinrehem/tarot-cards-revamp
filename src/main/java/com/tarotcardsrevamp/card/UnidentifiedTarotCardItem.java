@@ -1,12 +1,8 @@
 package com.tarotcardsrevamp.card;
 
-import com.tarotcardsrevamp.core.ModItems;
-import com.tarotcardsrevamp.loot.SmartCardSelector;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -20,27 +16,19 @@ import java.util.function.Consumer;
 
 public class UnidentifiedTarotCardItem extends Item {
 
-    private static final SmartCardSelector SELECTOR = new SmartCardSelector();
-
     public UnidentifiedTarotCardItem(Properties properties) {
         super(properties.stacksTo(16));
     }
 
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
-        ItemStack held = player.getItemInHand(hand);
         if (!level.isClientSide()) {
-            var tracker = com.tarotcardsrevamp.loot.PlayerCardScanner.scanPlayerCards(player);
-            TarotCardType chosen = SELECTOR.pickCard(tracker);
-            ItemStack revealed = new ItemStack(ModItems.getCardItem(chosen));
-
-            held.shrink(1);
-            if (!player.getInventory().add(revealed)) {
-                player.drop(revealed, false, Prediction.SERVER_ONLY);
-            }
-
-            level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                    SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 0.8f, 1.4f);
+            player.sendSystemMessage(
+                    Component.translatable("tarotcardsrevamp.message.use_divination_table")
+                            .withStyle(ChatFormatting.GOLD)
+            );
+        } else {
+            player.playSound(SoundEvents.AMETHYST_BLOCK_CHIME, 0.8F, 1.2F);
         }
         return InteractionResult.SUCCESS;
     }
@@ -48,7 +36,7 @@ public class UnidentifiedTarotCardItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
         tooltipAdder.accept(Component.translatable("item.tarotcardsrevamp.unidentified_tarot_card.desc")
-                .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.ITALIC));
+                .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
         super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, tooltipFlag);
     }
 }

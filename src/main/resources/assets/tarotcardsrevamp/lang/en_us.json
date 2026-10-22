@@ -1,7 +1,8 @@
 {
     "item.tarotcardsrevamp.tarot_deck": "Tarot Deck",
     "item.tarotcardsrevamp.unidentified_tarot_card": "Unidentified Tarot Card",
-    "item.tarotcardsrevamp.unidentified_tarot_card.desc": "Right-click to reveal a Tarot Card!",
+    "item.tarotcardsrevamp.unidentified_tarot_card.desc": "Place on a Divination Table to reveal its Arcana.",
+    "tarotcardsrevamp.message.use_divination_table": "Bring this card to a Divination Table to reveal its secrets!",
     "item.tarotcardsrevamp.divination_table": "Divination Table",
     "block.tarotcardsrevamp.divination_table": "Divination Table",
     "container.tarotcardsrevamp.divination_table": "Divination Table",
