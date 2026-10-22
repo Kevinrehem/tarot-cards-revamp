@@ -2,6 +2,7 @@ package com.tarotcardsrevamp.block.menu;
 
 import com.tarotcardsrevamp.card.TarotCardType;
 import com.tarotcardsrevamp.card.UnidentifiedTarotCardItem;
+import com.tarotcardsrevamp.core.ModAttachmentTypes;
 import com.tarotcardsrevamp.core.ModBlocks;
 import com.tarotcardsrevamp.core.ModItems;
 import com.tarotcardsrevamp.core.ModMenuTypes;
@@ -80,6 +81,9 @@ public class DivinationMenu extends AbstractContainerMenu {
                     }
                 });
 
+                // The card was divined! Clear the stored offer so a new card will be generated next
+                player.setData(ModAttachmentTypes.DIVINATION_OFFER, -1);
+
                 // Trigger next divination if more cards remain in input
                 updateResult();
             }
@@ -106,14 +110,28 @@ public class DivinationMenu extends AbstractContainerMenu {
     }
 
     private void updateResult() {
+        if (this.player.level().isClientSide()) {
+            return;
+        }
+
         ItemStack input = this.inputContainer.getItem(0);
         if (input.isEmpty() || !(input.getItem() instanceof UnidentifiedTarotCardItem)) {
             this.resultContainer.setItem(0, ItemStack.EMPTY);
         } else {
             if (this.resultContainer.getItem(0).isEmpty()) {
-                // Divinate a new card using player tracking
-                var tracker = com.tarotcardsrevamp.loot.PlayerCardScanner.scanPlayerCards(this.player);
-                TarotCardType chosen = SELECTOR.pickCard(tracker);
+                // Check if player already has a persistent divination offer
+                int storedOffer = this.player.getData(ModAttachmentTypes.DIVINATION_OFFER);
+                TarotCardType chosen;
+
+                if (storedOffer >= 0 && storedOffer < TarotCardType.values().length) {
+                    chosen = TarotCardType.values()[storedOffer];
+                } else {
+                    // Divinate a new card using player card scanning / smart selector
+                    var tracker = com.tarotcardsrevamp.loot.PlayerCardScanner.scanPlayerCards(this.player);
+                    chosen = SELECTOR.pickCard(tracker);
+                    this.player.setData(ModAttachmentTypes.DIVINATION_OFFER, chosen.ordinal());
+                }
+
                 ItemStack revealed = new ItemStack(ModItems.getCardItem(chosen));
                 this.resultContainer.setItem(0, revealed);
             }

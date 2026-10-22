@@ -28,6 +28,7 @@ public class TarotCardsRevampMod {
         com.tarotcardsrevamp.core.ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModDataComponents.DATA_COMPONENT_TYPES.register(modEventBus);
+        com.tarotcardsrevamp.core.ModAttachmentTypes.ATTACHMENT_TYPES.register(modEventBus);
         ModMenuTypes.MENU_TYPES.register(modEventBus);
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         com.tarotcardsrevamp.core.ModLootModifiers.GLOBAL_LOOT_MODIFIER_SERIALIZERS.register(modEventBus);
