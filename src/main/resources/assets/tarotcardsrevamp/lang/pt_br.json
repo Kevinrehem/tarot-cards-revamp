@@ -139,5 +139,6 @@
     "tarotcardsrevamp.card.judgement.desc.base": "10% de chance de causar Golpe Critico Devastador (200% de dano).",
     "tarotcardsrevamp.card.judgement.desc.ascended": "30% de chance de 250% de dano com raio sagrado seguro, mais efeito de Totem da Imortalidade.",
     "tarotcardsrevamp.card.the_world.desc.base": "Aura de Lentidao I em inimigos num raio de 4 blocos.",
-    "tarotcardsrevamp.card.the_world.desc.ascended": "Aura Temporal em 8 blocos (Lentidao IV, Fadiga de Mineracao III e desacelera projeteis)."
+    "tarotcardsrevamp.card.the_world.desc.ascended": "Aura Temporal em 8 blocos (Lentidao IV, Fadiga de Mineracao III e desacelera projeteis).",
+    "curios.identifier.tarot_deck": "Deck de Tarot"
 }

@@ -139,5 +139,6 @@
     "tarotcardsrevamp.card.judgement.desc.base": "10% chance to land a Devastating Critical Hit (200% damage).",
     "tarotcardsrevamp.card.judgement.desc.ascended": "30% chance to deal 250% damage with safe divine lightning, plus built-in Totem of Undying effect.",
     "tarotcardsrevamp.card.the_world.desc.base": "Slowness I aura affecting enemies within 4 blocks.",
-    "tarotcardsrevamp.card.the_world.desc.ascended": "Temporal Aura within 8 blocks (Slowness IV, Mining Fatigue III, and slows incoming projectiles)."
+    "tarotcardsrevamp.card.the_world.desc.ascended": "Temporal Aura within 8 blocks (Slowness IV, Mining Fatigue III, and slows incoming projectiles).",
+    "curios.identifier.tarot_deck": "Tarot Deck"
 }

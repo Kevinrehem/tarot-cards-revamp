@@ -1,0 +1,8 @@
+{
+  "order": 250,
+  "size": 1,
+  "icon": "tarotcardsrevamp:slot/empty_tarot_deck_slot",
+  "validators": [
+    "curios:tag"
+  ]
+}
