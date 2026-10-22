@@ -1,0 +1,36 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_tarot_card": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#tarotcardsrevamp:tarot_cards"
+          }
+        ]
+      }
+    },
+    "has_unidentified_card": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "tarotcardsrevamp:unidentified_tarot_card"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_tarot_card",
+      "has_unidentified_card"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "tarotcardsrevamp:recycle_tarot_cards"
+    ]
+  }
+}

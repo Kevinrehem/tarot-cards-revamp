@@ -36,8 +36,8 @@ public class TarotConfig {
                 .comment("Probability (0.0 to 1.0) of finding 3 Unidentified Tarot Cards in a chest (default 1%).")
                 .defineInRange("chance3Cards", 0.01, 0.0, 1.0);
         SMART_LOOT_BIAS = builder
-                .comment("Probability (0.0 to 1.0) of prioritizing undiscovered cards when a chest generates tarot loot.")
-                .defineInRange("smartLootBias", 0.80, 0.0, 1.0);
+                .comment("Probability (0.0 to 1.0) of prioritizing undiscovered cards (default 0.0, uniform equal chance for all 22 cards).")
+                .defineInRange("smartLootBias", 0.0, 0.0, 1.0);
         builder.pop();
 
         builder.push("quests");

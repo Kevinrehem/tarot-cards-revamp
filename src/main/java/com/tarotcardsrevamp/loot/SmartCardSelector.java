@@ -31,7 +31,16 @@ public class SmartCardSelector {
      */
     public TarotCardType pickCard(PlayerTarotTracker tracker) {
         TarotCardType[] all = TarotCardType.values();
-        if (tracker == null) {
+        double bias = 0.0;
+        try {
+            if (com.tarotcardsrevamp.config.TarotConfig.SMART_LOOT_BIAS != null) {
+                bias = com.tarotcardsrevamp.config.TarotConfig.SMART_LOOT_BIAS.get();
+            }
+        } catch (Throwable ignored) {
+            // Unit tests without config spec loaded
+        }
+
+        if (bias <= 0.0 || tracker == null) {
             return all[random.nextInt(all.length)];
         }
 
@@ -42,15 +51,11 @@ public class SmartCardSelector {
             }
         }
 
-        if (missing.isEmpty()) {
+        if (missing.isEmpty() || random.nextDouble() >= bias) {
             return all[random.nextInt(all.length)];
         }
 
-        if (random.nextFloat() < 0.80f || missing.size() == all.length) {
-            return missing.get(random.nextInt(missing.size()));
-        } else {
-            return all[random.nextInt(all.length)];
-        }
+        return missing.get(random.nextInt(missing.size()));
     }
 
     /**
