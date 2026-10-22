@@ -36,7 +36,7 @@
 - [ ] Implement Global Loot Modifier (`TarotLootModifier` + GLM JSON) for structure chests with smart weighting (`SmartCardSelector` exists but is unused by loot).
 - [ ] Complete `/tarot` admin command (`giveall` and `ascend_held` exist; `progress` and `reset` missing).
 - [x] Generate 16x16 placeholder textures for the 22 cards, Unidentified card and Deck, item models, and `en_us.json`/`pt_br.json`.
-- [ ] Replace placeholder textures with final art and add the Ascended visual overlay.
+- [x] Replace placeholder textures with final art and add the Ascended visual overlay.
 
 ## Security Validation Tasks
 
