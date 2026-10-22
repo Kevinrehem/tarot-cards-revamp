@@ -60,6 +60,21 @@ public class DeckDataComponent {
         return new DeckDataComponent(copy);
     }
 
+    public DeckDataComponent addProgress(int index, int amount, int goal) {
+        DeckSlotEntry entry = getSlot(index);
+        if (!entry.present() || !entry.active() || entry.ascended() || amount <= 0) {
+            return this;
+        }
+        int newProg = (int) Math.min((long) entry.questProgress() + amount, goal);
+        boolean nowAscended = newProg >= goal && goal > 0;
+        return withSlot(index, new DeckSlotEntry(true, entry.active(), newProg, nowAscended));
+    }
+
+    public DeckDataComponent addProgress(TarotCardType type, int amount, int goal) {
+        if (type == null) return this;
+        return addProgress(type.ordinal(), amount, goal);
+    }
+
     public DeckDataComponent toggleSlotActive(int index) {
         if (index < 0 || index >= TOTAL_SLOTS) {
             return this;

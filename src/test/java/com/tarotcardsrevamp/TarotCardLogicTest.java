@@ -278,4 +278,67 @@ public class TarotCardLogicTest {
         assertEquals(0.25, pct1, 0.005, "1 card must occur with ~25% frequency");
         assertEquals(0.64, pct0, 0.005, "0 cards must occur with ~64% frequency");
     }
+
+    @Test
+    @DisplayName("TP-08: DeckDataComponent.addProgress increments progress on present cards and triggers ascension at goal")
+    void testDeckDataComponentAddProgressAndAscension() {
+        int chariotGoal = TarotCardType.THE_CHARIOT.getDefaultGoal();
+        assertEquals(10000, chariotGoal);
+
+        DeckDataComponent deck = new DeckDataComponent();
+        // Insert The Chariot (slot 7) with 0 progress
+        deck = deck.withSlot(TarotCardType.THE_CHARIOT.ordinal(),
+                new DeckDataComponent.DeckSlotEntry(true, true, 0, false));
+
+        assertTrue(deck.contains(TarotCardType.THE_CHARIOT));
+        assertEquals(0, deck.getSlot(TarotCardType.THE_CHARIOT).questProgress());
+        assertFalse(deck.getSlot(TarotCardType.THE_CHARIOT).ascended());
+
+        // Add 500 sprint blocks
+        deck = deck.addProgress(TarotCardType.THE_CHARIOT, 500, chariotGoal);
+        assertEquals(500, deck.getSlot(TarotCardType.THE_CHARIOT).questProgress());
+        assertFalse(deck.getSlot(TarotCardType.THE_CHARIOT).ascended());
+
+        // Add 9,500 more sprint blocks to reach 10,000
+        deck = deck.addProgress(TarotCardType.THE_CHARIOT, 9500, chariotGoal);
+        assertEquals(10000, deck.getSlot(TarotCardType.THE_CHARIOT).questProgress());
+        assertTrue(deck.getSlot(TarotCardType.THE_CHARIOT).ascended(), "The Chariot must ascend when reaching 10,000 blocks in deck");
+        assertEquals(1, deck.getAscendedCount());
+
+        // Excess progress beyond goal does not exceed goal or break ascension
+        deck = deck.addProgress(TarotCardType.THE_CHARIOT, 500, chariotGoal);
+        assertEquals(10000, deck.getSlot(TarotCardType.THE_CHARIOT).questProgress());
+        assertTrue(deck.getSlot(TarotCardType.THE_CHARIOT).ascended());
+    }
+
+    @Test
+    @DisplayName("TP-09: DeckDataComponent.addProgress respects boundary conditions: inactive, empty, or invalid slots")
+    void testDeckDataComponentAddProgressEdgeCases() {
+        DeckDataComponent deck = new DeckDataComponent();
+
+        // 1. Empty slot should not gain progress
+        deck = deck.addProgress(TarotCardType.THE_FOOL, 100, 200);
+        assertFalse(deck.getSlot(TarotCardType.THE_FOOL).present());
+        assertEquals(0, deck.getSlot(TarotCardType.THE_FOOL).questProgress());
+
+        // 2. Inactive card should not gain progress
+        deck = deck.withSlot(TarotCardType.THE_FOOL.ordinal(),
+                new DeckDataComponent.DeckSlotEntry(true, false, 20, false));
+        deck = deck.addProgress(TarotCardType.THE_FOOL, 50, 200);
+        assertEquals(20, deck.getSlot(TarotCardType.THE_FOOL).questProgress());
+
+        // 3. Zero or negative progress amount should not alter state
+        deck = deck.toggleSlotActive(TarotCardType.THE_FOOL.ordinal()); // make active
+        assertTrue(deck.getSlot(TarotCardType.THE_FOOL).active());
+        deck = deck.addProgress(TarotCardType.THE_FOOL, 0, 200);
+        assertEquals(20, deck.getSlot(TarotCardType.THE_FOOL).questProgress());
+        deck = deck.addProgress(TarotCardType.THE_FOOL, -10, 200);
+        assertEquals(20, deck.getSlot(TarotCardType.THE_FOOL).questProgress());
+
+        // 4. Out of bounds index
+        DeckDataComponent untouched = deck.addProgress(-1, 100, 200);
+        assertSame(deck, untouched);
+        untouched = deck.addProgress(99, 100, 200);
+        assertSame(deck, untouched);
+    }
 }

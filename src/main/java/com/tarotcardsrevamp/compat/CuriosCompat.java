@@ -12,6 +12,7 @@ import net.neoforged.fml.ModList;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -27,8 +28,8 @@ public class CuriosCompat {
         return CURIOS_LOADED;
     }
 
-    public static void scanCuriosSlots(LivingEntity entity, ActiveCardResolver resolver) {
-        if (!CURIOS_LOADED || entity == null || resolver == null) {
+    public static void forEachCuriosStack(LivingEntity entity, Consumer<ItemStack> consumer) {
+        if (!CURIOS_LOADED || entity == null || consumer == null) {
             return;
         }
 
@@ -67,19 +68,7 @@ public class CuriosCompat {
                         Object stackObj = stackMethod.invoke(slotResult);
 
                         if (stackObj instanceof ItemStack stack && !stack.isEmpty()) {
-                            if (stack.getItem() instanceof TarotCardItem cardItem) {
-                                var data = TarotCardItem.getData(stack);
-                                resolver.offer(cardItem.getCardType(), data.active(), data.ascended(), data.questProgress());
-                            } else if (stack.getItem() instanceof TarotDeckItem) {
-                                DeckDataComponent deck = TarotDeckItem.getData(stack);
-                                for (int s = 0; s < DeckDataComponent.TOTAL_SLOTS; s++) {
-                                    var entry = deck.getSlot(s);
-                                    if (entry != null && entry.present()) {
-                                        TarotCardType cardType = TarotCardType.values()[s];
-                                        resolver.offer(cardType, entry.active(), entry.ascended(), entry.questProgress());
-                                    }
-                                }
-                            }
+                            consumer.accept(stack);
                         }
                     }
                 }
@@ -87,9 +76,31 @@ public class CuriosCompat {
         } catch (Throwable t) {
             if (!loggedError) {
                 loggedError = true;
-                System.err.println("[TarotCardsRevamp] CuriosCompat error during slot scanning: " + t);
+                System.err.println("[TarotCardsRevamp] CuriosCompat error during curios slot traversal: " + t);
                 t.printStackTrace();
             }
         }
+    }
+
+    public static void scanCuriosSlots(LivingEntity entity, ActiveCardResolver resolver) {
+        if (!CURIOS_LOADED || entity == null || resolver == null) {
+            return;
+        }
+
+        forEachCuriosStack(entity, stack -> {
+            if (stack.getItem() instanceof TarotCardItem cardItem) {
+                var data = TarotCardItem.getData(stack);
+                resolver.offer(cardItem.getCardType(), data.active(), data.ascended(), data.questProgress());
+            } else if (stack.getItem() instanceof TarotDeckItem) {
+                DeckDataComponent deck = TarotDeckItem.getData(stack);
+                for (int s = 0; s < DeckDataComponent.TOTAL_SLOTS; s++) {
+                    var entry = deck.getSlot(s);
+                    if (entry != null && entry.present()) {
+                        TarotCardType cardType = TarotCardType.values()[s];
+                        resolver.offer(cardType, entry.active(), entry.ascended(), entry.questProgress());
+                    }
+                }
+            }
+        });
     }
 }
