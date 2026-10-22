@@ -15,6 +15,7 @@ public class TarotConfig {
     public static final ModConfigSpec.DoubleValue CHANCE_3_CARDS;
     public static final ModConfigSpec.DoubleValue SMART_LOOT_BIAS;
     public static final ModConfigSpec.DoubleValue QUEST_GOAL_MULTIPLIER;
+    public static final ModConfigSpec.BooleanValue ENABLE_ASCENDED_FOOL_DOUBLE_JUMP;
     public static final ModConfigSpec.BooleanValue ENABLE_ASCENDED_CHARIOT_FLUID_WALK;
     public static final ModConfigSpec.IntValue JUDGEMENT_TOTEM_COOLDOWN_SECONDS;
 
@@ -46,6 +47,9 @@ public class TarotConfig {
         builder.pop();
 
         builder.push("cards");
+        ENABLE_ASCENDED_FOOL_DOUBLE_JUMP = builder
+                .comment("Whether Ascended The Fool grants mid-air Double Jump.")
+                .define("enableAscendedFoolDoubleJump", true);
         ENABLE_ASCENDED_CHARIOT_FLUID_WALK = builder
                 .comment("Whether Ascended The Chariot allows sprinting over water and lava surfaces.")
                 .define("enableAscendedChariotFluidWalk", true);

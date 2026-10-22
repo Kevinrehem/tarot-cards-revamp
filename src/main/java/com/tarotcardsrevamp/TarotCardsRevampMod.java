@@ -32,6 +32,9 @@ public class TarotCardsRevampMod {
         ModCreativeTabs.CREATIVE_MODE_TABS.register(modEventBus);
         com.tarotcardsrevamp.core.ModLootModifiers.GLOBAL_LOOT_MODIFIER_SERIALIZERS.register(modEventBus);
 
+        // Network packets
+        modEventBus.addListener(com.tarotcardsrevamp.network.TarotNetwork::register);
+
         // Client events
         modEventBus.addListener(com.tarotcardsrevamp.client.ClientModEvents::onRegisterMenuScreens);
 
