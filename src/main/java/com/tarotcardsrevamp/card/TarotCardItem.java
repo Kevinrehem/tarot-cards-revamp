@@ -80,6 +80,10 @@ public class TarotCardItem extends Item {
                     .withStyle(ChatFormatting.GOLD)
                     .append(Component.translatable("tarotcardsrevamp.card." + cardType.getId() + ".desc.ascended")
                             .withStyle(ChatFormatting.YELLOW)));
+            tooltipAdder.accept(Component.translatable("tarotcardsrevamp.tooltip.quest_completed_label")
+                    .withStyle(ChatFormatting.DARK_GREEN)
+                    .append(Component.translatable(cardType.getQuestTranslationKey())
+                            .withStyle(ChatFormatting.GRAY)));
         } else {
             tooltipAdder.accept(Component.translatable("tarotcardsrevamp.status.base")
                     .withStyle(ChatFormatting.AQUA));
@@ -91,7 +95,11 @@ public class TarotCardItem extends Item {
                     .withStyle(ChatFormatting.DARK_PURPLE)
                     .append(Component.translatable("tarotcardsrevamp.card." + cardType.getId() + ".desc.ascended")
                             .withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC)));
-            tooltipAdder.accept(Component.translatable("tarotcardsrevamp.tooltip.quest",
+            tooltipAdder.accept(Component.translatable("tarotcardsrevamp.tooltip.quest_objective_label")
+                    .withStyle(ChatFormatting.GOLD)
+                    .append(Component.translatable(cardType.getQuestTranslationKey())
+                            .withStyle(ChatFormatting.YELLOW)));
+            tooltipAdder.accept(Component.translatable("tarotcardsrevamp.tooltip.quest_progress",
                     data.questProgress(), goal, data.getPercent(goal))
                     .withStyle(ChatFormatting.YELLOW));
         }

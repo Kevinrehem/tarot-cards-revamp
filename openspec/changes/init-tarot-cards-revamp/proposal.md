@@ -21,28 +21,32 @@ Classic Tarot Cards mods provided passive buffs when held in the inventory or Ta
 ### In Scope
 - **Project Build & NeoForge 26.3.0.95 Setup**: Gradle configuration (`settings.gradle`, `gradle.properties`, `build.gradle`), `neoforge.mods.toml`, and main mod entrypoint `com.tarotcardsrevamp.TarotCardsRevampMod`.
 - **22 Major Arcana Tarot Cards (`TarotCardType` & `TarotCardItem`)**:
-  - **0 - The Fool**: Base: Jump Boost I + -25% fall damage | Quest: Survive 200 fall damage (or jump 1,000 times) | Ascended: Jump Boost III, 100% fall damage immunity, Double Jump.
-  - **I - The Magician**: Base: 12.5% chance not to consume item durability | Quest: Consume 2,000 durability or enchant 15 items | Ascended: 50% chance not to consume durability + held items repair 1 durability every 5s.
-  - **II - The High Priestess**: Base: -15% anvil XP cost | Quest: Gain 50 XP levels or use 10 enchanted books | Ascended: -50% anvil XP cost + boosts compatible held equipment enchantments by +1 level.
-  - **III - The Empress**: Base: -25% animal breeding cooldown & +25% baby growth speed nearby | Quest: Breed 50 animals | Ascended: Instant baby animal growth nearby, -75% breeding cooldown, passive animals follow player.
-  - **IV - The Emperor**: Base: Hero of the Village I | Quest: Complete 64 Villager trades | Ascended: Hero of the Village V + Iron Golems never aggro and defend the player.
-  - **V - The Hierophant**: Base: +25% XP orb value | Quest: Collect 2,500 raw XP | Ascended: +150% XP orb value (2.5x), long-range XP magnet, heals 0.5 heart per 20 XP collected.
-  - **VI - The Lovers**: Base: Weak Regeneration I to nearby allies/pets | Quest: Heal 100 HP on allies/pets or tame 10 animals | Ascended: Regeneration II to player and allies within 12 blocks + pets take 50% less damage and deal +50% damage.
-  - **VII - The Chariot**: Base: +10% Movement Speed | Quest: Travel 10,000 blocks sprinting or mounted | Ascended: +40% Movement Speed, 1.0 block Step Assist, +50% mount speed, and **sprint across fluids (water & lava) without sinking or taking magma/lava foot damage**.
-  - **VIII - Strength**: Base: +15% Melee Damage | Quest: Deal 1,500 melee damage to hostile mobs | Ascended: +50% Melee Damage + attacks bypass 30% of target armor.
-  - **IX - The Hermit**: Base: +2 Armor when no allies/players within 16 blocks | Quest: Spend 3 in-game days isolated from players/villagers | Ascended: +8 Armor, +4 Armor Toughness, and reduced mob detection range when isolated.
-  - **X - Wheel of Fortune**: Base: +0.5 Luck & 15% chance for +1 extra Looting/Fortune roll | Quest: Open 25 loot chests or mine 100 rare ores | Ascended: +3 Luck + effective +2 Fortune and +2 Looting bonus drops.
-  - **XI - Justice**: Base: Reflects 15% incoming damage back to attacker | Quest: Take 300 combat damage | Ascended: Reflects 75% incoming damage as True Damage + reduces incoming damage by 15%.
-  - **XII - The Hanged Man**: Base: Converts 10% of damage taken into XP | Quest: Take 400 damage total | Ascended: Converts 50% of damage taken into XP orbs + grants Resistance III and +30% damage when below 30% HP.
-  - **XIII - Death**: Base: +15% damage vs Undead | Quest: Kill 150 hostile mobs | Ascended: +50% damage to all hostiles, 15% Lifesteal, and instant execute on non-boss targets below 15% HP.
-  - **XIV - Temperance**: Base: -25% hunger exhaustion | Quest: Eat 64 food items | Ascended: -85% hunger exhaustion + eating any food grants Absorption II and extra instant healing.
-  - **XV - The Devil**: Base: Attacks inflict 3s fire and weak Wither I | Quest: Kill 100 Nether/hostile mobs | Ascended: Attacks inflict Wither III (6s) & Fire, player is 100% immune to Wither, and deals +35% damage to debuffed targets.
-  - **XVI - The Tower**: Base: -25% explosion damage | Quest: Survive 15 explosions | Ascended: 100% explosion immunity + heavy hits/falls trigger a non-griefing shockwave knocking back nearby enemies.
-  - **XVII - The Star**: Base: +0.5 Block Reach | Quest: Break or place 2,000 blocks | Ascended: +2.5 Block Reach, +1.5 Entity Attack Reach, and permanent Haste II.
-  - **XVIII - The Moon**: Base: Permanent Night Vision | Quest: Walk 3,000 blocks at night or kill 50 mobs at night | Ascended: Night Vision + while in darkness/night grants +25% Speed, +25% Damage, and Regeneration I.
-  - **XIX - The Sun**: Base: +4 Max HP (+2 Hearts) | Quest: Walk 3,000 blocks under sunlight or survive 10 dawns | Ascended: +20 Max HP (+10 Hearts), passive sunlight regeneration, and 10s Fire Resistance shield.
-  - **XX - Judgement**: Base: 10% chance to deal 200% damage on hit | Quest: Land 100 critical hits | Ascended: 30% chance to deal 250% damage + strikes target with safe divine lightning + built-in Totem of Undying effect (10-minute cooldown).
-  - **XXI - The World**: Base: Slowness I aura (4 blocks) on enemies | Quest: Visit Overworld, Nether, and End + defeat 200 mobs | Ascended: Temporal Aura within 8 blocks (Slowness IV + Mining Fatigue III on enemies + slows incoming projectiles).
+
+  |**Card**|**Quest**|**Ascended form**|
+  |:--|:--|:--|
+  |**0 - The Fool**: Base: Jump Boost I + -25% fall damage | Quest: Survive 200 fall damage (or jump 1,000 times) | Ascended: Jump Boost III, 100% fall damage immunity, Double Jump.|
+  |**I - The Magician**: Base: 12.5% chance not to consume item durability | Quest: Consume 2,000 durability or enchant 15 items | Ascended: 50% chance not to consume durability + held items repair 1 durability every 5s.|
+  |**II - The High Priestess**: Base: -15% anvil XP cost | Quest: Gain 50 XP levels or use 10 enchanted books | Ascended: -50% anvil XP cost + boosts compatible held equipment enchantments by +1 level.|
+  |**III - The Empress**: Base: -25% animal breeding cooldown & +25% baby growth speed nearby | Quest: Breed 50 animals | Ascended: Instant baby animal growth nearby, -75% breeding cooldown, passive animals follow |player.|
+  |**IV - The Emperor**: Base: Hero of the Village I | Quest: Complete 64 Villager trades | Ascended: Hero of the Village V + Iron Golems never aggro and defend the player.|
+  |**V - The Hierophant**: Base: +25% XP orb value | Quest: Collect 2,500 raw XP | Ascended: +150% XP orb value (2.5x), long-range XP magnet, heals 0.5 heart per 20 XP collected.|
+  |**VI - The Lovers**: Base: Weak Regeneration I to nearby allies/pets | Quest: Heal 100 HP on allies/pets or tame 10 animals | Ascended: Regeneration II to player and allies within 12 blocks + pets take 50% less |damage and deal +50% damage.|
+  |**VII - The Chariot**: Base: +10% Movement Speed | Quest: Travel 10,000 blocks sprinting or mounted | Ascended: +40% Movement Speed, 1.0 block Step Assist, +50% mount speed, and **sprint across fluids (water & |lava) without sinking or taking magma/lava foot damage**.|
+  |**VIII - Strength**: Base: +15% Melee Damage | Quest: Deal 1,500 melee damage to hostile mobs | Ascended: +50% Melee Damage + attacks bypass 30% of target armor.|
+  |**IX - The Hermit**: Base: +2 Armor when no allies/players within 16 blocks | Quest: Spend 3 in-game days isolated from players/villagers | Ascended: +8 Armor, +4 Armor Toughness, and reduced mob detection range when isolated.|
+  |**X - Wheel of Fortune**: Base: +0.5 Luck & 15% chance for +1 extra Looting/Fortune roll | Quest: Open 25 loot chests or mine 100 rare ores | Ascended: +3 Luck + effective +2 Fortune and +2 Looting bonus drops.|
+  |**XI - Justice**: Base: Reflects 15% incoming damage back to attacker | Quest: Take 300 combat damage | Ascended: Reflects 75% incoming damage as True Damage + reduces incoming damage by 15%.|
+  |**XII - The Hanged Man**: Base: Converts 10% of damage taken into XP | Quest: Take 400 damage total | Ascended: Converts 50% of damage taken into XP orbs + grants Resistance III and +30% damage when below 30% HP.|
+  |**XIII - Death**: Base: +15% damage vs Undead | Quest: Kill 150 hostile mobs | Ascended: +50% damage to all hostiles, 15% Lifesteal, and instant execute on non-boss targets below 15% HP.|
+  |**XIV - Temperance**: Base: -25% hunger exhaustion | Quest: Eat 64 food items | Ascended: -85% hunger exhaustion + eating any food grants Absorption II and extra instant healing.|
+  |**XV - The Devil**: Base: Attacks inflict 3s fire and weak Wither I | Quest: Kill 100 Nether/hostile mobs | Ascended: Attacks inflict Wither III (6s) & Fire, player is 100% immune to Wither, and deals +35% damage to debuffed targets.|
+  |**XVI - The Tower**: Base: -25% explosion damage | Quest: Survive 15 explosions | Ascended: 100% explosion immunity + heavy hits/falls trigger a non-griefing shockwave knocking back nearby enemies.|
+  |**XVII - The Star**: Base: +0.5 Block Reach | Quest: Break or place 2,000 blocks | Ascended: +2.5 Block Reach, +1.5 Entity Attack Reach, and permanent Haste II.|
+  |**XVIII - The Moon**: Base: Permanent Night Vision | Quest: Walk 3,000 blocks at night or kill 50 mobs at night | Ascended: Night Vision + while in darkness/night grants +25% Speed, +25% Damage, and Regeneration I.|
+  |**XIX - The Sun**: Base: +4 Max HP (+2 Hearts) | Quest: Walk 3,000 blocks under sunlight or survive 10 dawns | Ascended: +20 Max HP (+10 Hearts), passive sunlight regeneration, and 10s Fire Resistance shield.|
+  |**XX - Judgement**: Base: 10% chance to deal 200% damage on hit | Quest: Land 100 critical hits | Ascended: 30% chance to deal 250% damage + strikes target with safe divine lightning + built-in Totem of Undying effect (10-minute cooldown).|
+  |**XXI - The World**: Base: Slowness I aura (4 blocks) on enemies | Quest: Visit Overworld, Nether, and End + defeat 200 mobs | Ascended: Temporal Aura within 8 blocks (Slowness IV + Mining Fatigue III on enemies + slows incoming projectiles).|
+
 - **Card Activation & DataComponents**:
   - Right-click toggle (active/inactive) per card.
   - Active in player inventory or inside the Tarot Deck (inventory or Curios slot); duplicate cards of the same type do not stack buffs (highest tier takes precedence).

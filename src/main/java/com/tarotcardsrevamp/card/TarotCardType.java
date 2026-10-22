@@ -89,6 +89,10 @@ public enum TarotCardType {
         return defaultGoal;
     }
 
+    public String getQuestTranslationKey() {
+        return "tarotcardsrevamp.card." + id + ".quest";
+    }
+
     public static TarotCardType byOrdinalSlot(int slot) {
         TarotCardType[] values = values();
         if (slot >= 0 && slot < values.length) {

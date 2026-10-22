@@ -6,10 +6,14 @@ import com.tarotcardsrevamp.card.TarotCardType;
 import com.tarotcardsrevamp.deck.DeckDataComponent;
 import com.tarotcardsrevamp.effect.ActiveCardResolver;
 import com.tarotcardsrevamp.effect.ActiveCardStatus;
+import com.tarotcardsrevamp.effect.TarotEffectCalculator;
 import com.tarotcardsrevamp.loot.SmartCardSelector;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -341,4 +345,183 @@ public class TarotCardLogicTest {
         untouched = deck.addProgress(99, 100, 200);
         assertSame(deck, untouched);
     }
+
+    @Test
+    @DisplayName("TP-10: All 22 TarotCardTypes have valid quest translation keys, quest types, and positive default goals")
+    void testQuestTranslationKeysAndGoals() {
+        assertEquals(22, TarotCardType.values().length);
+        for (TarotCardType type : TarotCardType.values()) {
+            assertNotNull(type.getQuestTranslationKey());
+            assertEquals("tarotcardsrevamp.card." + type.getId() + ".quest", type.getQuestTranslationKey());
+            assertTrue(type.getDefaultGoal() > 0, "Default goal must be greater than zero for " + type.getId());
+            assertNotNull(type.getQuestType(), "QuestType must not be null for " + type.getId());
+        }
+    }
+
+    @Test
+    @DisplayName("TP-11: Localization files (en_us and pt_br) contain all 22 quest translations and tooltip labels")
+    void testQuestLocalizationKeysExistInLangFiles() throws IOException {
+        Path enUsPath = Path.of("src/main/resources/assets/tarotcardsrevamp/lang/en_us.json");
+        Path ptBrPath = Path.of("src/main/resources/assets/tarotcardsrevamp/lang/pt_br.json");
+
+        assertTrue(Files.exists(enUsPath), "en_us.json must exist");
+        assertTrue(Files.exists(ptBrPath), "pt_br.json must exist");
+
+        String enUs = Files.readString(enUsPath);
+        String ptBr = Files.readString(ptBrPath);
+
+        String[] requiredCommonKeys = new String[]{
+                "tarotcardsrevamp.tooltip.quest_objective_label",
+                "tarotcardsrevamp.tooltip.quest_progress",
+                "tarotcardsrevamp.tooltip.quest_completed_label"
+        };
+
+        for (String key : requiredCommonKeys) {
+            assertTrue(enUs.contains("\"" + key + "\""), "en_us.json missing key: " + key);
+            assertTrue(ptBr.contains("\"" + key + "\""), "pt_br.json missing key: " + key);
+        }
+
+        for (TarotCardType card : TarotCardType.values()) {
+            String questKey = card.getQuestTranslationKey();
+            assertTrue(enUs.contains("\"" + questKey + "\""), "en_us.json missing quest key for " + card.getId());
+            assertTrue(ptBr.contains("\"" + questKey + "\""), "pt_br.json missing quest key for " + card.getId());
+        }
+    }
+
+    @Test
+    @DisplayName("TP-12: Attribute modifier deltas for Chariot, Hermit, Wheel of Fortune, Star, and Sun")
+    void testAttributeModifierDeltas() {
+        // VII - The Chariot Step Height (+0.4 Ascended -> 1.0 block total)
+        assertEquals(0.0, TarotEffectCalculator.getChariotStepHeightBonus(false, false));
+        assertEquals(0.0, TarotEffectCalculator.getChariotStepHeightBonus(true, false));
+        assertEquals(0.4, TarotEffectCalculator.getChariotStepHeightBonus(true, true), 0.0001);
+
+        // IX - The Hermit Armor & Toughness when isolated
+        assertEquals(0.0, TarotEffectCalculator.getHermitArmorBonus(true, true, false), "No armor bonus when not isolated");
+        assertEquals(2.0, TarotEffectCalculator.getHermitArmorBonus(true, false, true));
+        assertEquals(8.0, TarotEffectCalculator.getHermitArmorBonus(true, true, true));
+        assertEquals(0.0, TarotEffectCalculator.getHermitArmorToughnessBonus(true, false, true));
+        assertEquals(4.0, TarotEffectCalculator.getHermitArmorToughnessBonus(true, true, true));
+
+        // X - Wheel of Fortune Luck
+        assertEquals(0.0, TarotEffectCalculator.getWheelLuckBonus(false, true));
+        assertEquals(0.5, TarotEffectCalculator.getWheelLuckBonus(true, false));
+        assertEquals(3.0, TarotEffectCalculator.getWheelLuckBonus(true, true));
+
+        // XVII - The Star Block & Entity Reach
+        assertEquals(0.5, TarotEffectCalculator.getStarBlockReachBonus(true, false));
+        assertEquals(2.5, TarotEffectCalculator.getStarBlockReachBonus(true, true));
+        assertEquals(0.0, TarotEffectCalculator.getStarEntityReachBonus(true, false));
+        assertEquals(1.5, TarotEffectCalculator.getStarEntityReachBonus(true, true));
+
+        // XIX - The Sun Max Health
+        assertEquals(4.0, TarotEffectCalculator.getSunMaxHealthBonus(true, false));
+        assertEquals(20.0, TarotEffectCalculator.getSunMaxHealthBonus(true, true));
+    }
+
+    @Test
+    @DisplayName("TP-13: Outgoing combat calculations for Strength, Death, Devil, High Priestess, and Hanged Man")
+    void testOutgoingCombatEffectCalculations() {
+        // VIII - Strength (+15% Base, +50% + armor bypass Ascended)
+        assertEquals(11.5f, TarotEffectCalculator.computeStrengthMeleeDamage(10.0f, 0.0, true, false), 0.001f);
+        float ascendedStrengthNoArmor = TarotEffectCalculator.computeStrengthMeleeDamage(10.0f, 0.0, true, true);
+        float ascendedStrengthWithArmor = TarotEffectCalculator.computeStrengthMeleeDamage(10.0f, 20.0, true, true);
+        assertEquals(15.0f, ascendedStrengthNoArmor, 0.001f);
+        assertTrue(ascendedStrengthWithArmor > ascendedStrengthNoArmor, "Ascended Strength must deal bonus armor-bypassing damage against armored targets");
+
+        // XIII - Death (+15% Undead Base, +50% All Ascended, 15% Lifesteal, <15% HP Execute)
+        assertEquals(11.5f, TarotEffectCalculator.computeDeathOutgoingDamage(10.0f, true, true, false), 0.001f);
+        assertEquals(10.0f, TarotEffectCalculator.computeDeathOutgoingDamage(10.0f, false, true, false), 0.001f);
+        assertEquals(15.0f, TarotEffectCalculator.computeDeathOutgoingDamage(10.0f, false, true, true), 0.001f);
+        assertEquals(3.0f, TarotEffectCalculator.computeDeathLifesteal(20.0f, true, true), 0.001f);
+        assertTrue(TarotEffectCalculator.shouldExecuteTarget(14.0f, 100.0f, 2.0f, false, true, true));
+
+        // XV - The Devil (Fire 3s/6s, Wither I/III, +35% vs burning/debuffed)
+        assertEquals(3, TarotEffectCalculator.getDevilFireSeconds(true, false));
+        assertEquals(6, TarotEffectCalculator.getDevilFireSeconds(true, true));
+        assertEquals(0, TarotEffectCalculator.getDevilWitherAmplifier(true, false));
+        assertEquals(2, TarotEffectCalculator.getDevilWitherAmplifier(true, true));
+        assertEquals(13.5f, TarotEffectCalculator.computeDevilOutgoingDamage(10.0f, true, true, true), 0.001f);
+        assertEquals(10.0f, TarotEffectCalculator.computeDevilOutgoingDamage(10.0f, false, true, true), 0.001f);
+
+        // II - The High Priestess (+15% enchanted weapon damage when Ascended)
+        assertEquals(11.5f, TarotEffectCalculator.computeHighPriestessEnchantedDamage(10.0f, true, true, true), 0.001f);
+        assertEquals(10.0f, TarotEffectCalculator.computeHighPriestessEnchantedDamage(10.0f, true, true, false), 0.001f);
+
+        // XII - The Hanged Man (+30% damage when <= 30% HP)
+        assertTrue(TarotEffectCalculator.isHangedManLowHealthActive(6.0f, 20.0f, true, true));
+        assertFalse(TarotEffectCalculator.isHangedManLowHealthActive(10.0f, 20.0f, true, true));
+        assertEquals(13.0f, TarotEffectCalculator.computeHangedManOutgoingDamage(10.0f, 5.0f, 20.0f, true, true), 0.001f);
+    }
+
+    @Test
+    @DisplayName("TP-14: Incoming combat calculations for Justice reflection, Hanged Man XP conversion, and Lovers pet scaling")
+    void testIncomingAndPetCombatCalculations() {
+        // XI - Justice (Base: 0% mitigation, 15% reflected; Ascended: 15% mitigation, 75% reflected)
+        assertEquals(20.0f, TarotEffectCalculator.computeJusticeIncomingDamage(20.0f, true, false), 0.001f);
+        assertEquals(17.0f, TarotEffectCalculator.computeJusticeIncomingDamage(20.0f, true, true), 0.001f);
+        assertEquals(3.0f, TarotEffectCalculator.computeJusticeReflectedDamage(20.0f, true, false), 0.001f);
+        assertEquals(15.0f, TarotEffectCalculator.computeJusticeReflectedDamage(20.0f, true, true), 0.001f);
+
+        // XII - The Hanged Man XP conversion (10% Base, 50% Ascended)
+        assertEquals(2, TarotEffectCalculator.computeHangedManXp(20.0f, true, false));
+        assertEquals(10, TarotEffectCalculator.computeHangedManXp(20.0f, true, true));
+
+        // VI - The Lovers Pet scaling (+50% outgoing, -50% incoming when Ascended)
+        assertEquals(15.0f, TarotEffectCalculator.computeLoversPetOutgoingDamage(10.0f, true, true), 0.001f);
+        assertEquals(5.0f, TarotEffectCalculator.computeLoversPetIncomingDamage(10.0f, true, true), 0.001f);
+    }
+
+    @Test
+    @DisplayName("TP-15: Utility calculations for Magician, High Priestess Anvil, Empress Breeding, Hierophant XP, and Temperance")
+    void testUtilityAndEconomyCalculations() {
+        // I - The Magician durability preservation chance
+        assertEquals(0.125, TarotEffectCalculator.getMagicianDurabilitySaveChance(true, false));
+        assertEquals(0.50, TarotEffectCalculator.getMagicianDurabilitySaveChance(true, true));
+
+        // II - The High Priestess Anvil XP discount (-15% Base, -50% Ascended, clamped >= 1)
+        assertEquals(17, TarotEffectCalculator.computeDiscountedAnvilCost(20, true, false));
+        assertEquals(10, TarotEffectCalculator.computeDiscountedAnvilCost(20, true, true));
+        assertEquals(1, TarotEffectCalculator.computeDiscountedAnvilCost(1, true, true), "Anvil cost must never drop to 0 when original > 0");
+
+        // III - The Empress breeding cooldown & baby age
+        assertEquals(4500, TarotEffectCalculator.computeEmpressParentBreedingCooldown(6000, true, false));
+        assertEquals(1500, TarotEffectCalculator.computeEmpressParentBreedingCooldown(6000, true, true));
+        assertEquals(-18000, TarotEffectCalculator.computeEmpressBabyStartingAge(-24000, true, false));
+        assertEquals(0, TarotEffectCalculator.computeEmpressBabyStartingAge(-24000, true, true));
+
+        // V - The Hierophant XP bonus (+25% Base, +150% Ascended) and heal (0.05 HP per XP)
+        assertEquals(5, TarotEffectCalculator.computeHierophantBonusXp(20, true, false));
+        assertEquals(30, TarotEffectCalculator.computeHierophantBonusXp(20, true, true));
+        assertEquals(1.0f, TarotEffectCalculator.computeHierophantHeal(20, true, true), 0.001f);
+
+        // XIV - Temperance hunger exhaustion reduction (25% Base, 85% Ascended)
+        assertEquals(0.25f, TarotEffectCalculator.computeTemperanceExhaustionReduction(1.0f, true, false), 0.001f);
+        assertEquals(0.85f, TarotEffectCalculator.computeTemperanceExhaustionReduction(1.0f, true, true), 0.001f);
+    }
+
+    @Test
+    @DisplayName("TE-05: Bosses and players are excluded from Death execute, and negative inputs are safely clamped")
+    void testDeathExecuteSafetyAndNegativeClamping() {
+        // Bosses/players must never be executed even if remaining HP <= 15%
+        assertFalse(TarotEffectCalculator.shouldExecuteTarget(10.0f, 300.0f, 5.0f, true, true, true));
+        // Base tier must never execute
+        assertFalse(TarotEffectCalculator.shouldExecuteTarget(10.0f, 100.0f, 5.0f, false, true, false));
+        // Negative damage inputs clamp safely to 0
+        assertEquals(0.0f, TarotEffectCalculator.computeJusticeReflectedDamage(-10.0f, true, true));
+        assertEquals(0, TarotEffectCalculator.computeHangedManXp(-5.0f, true, true));
+    }
+
+    @Test
+    @DisplayName("TE-06: Judgement Totem of Undying cooldown enforcement across timestamps")
+    void testJudgementTotemCooldownEnforcement() {
+        long t0 = 1_000_000L;
+        int cooldownSec = 600; // 10 minutes = 600,000 ms
+
+        assertTrue(TarotEffectCalculator.isJudgementTotemReady(null, t0, cooldownSec), "Ready when never used");
+        assertFalse(TarotEffectCalculator.isJudgementTotemReady(t0, t0 + 100_000L, cooldownSec), "Blocked while on cooldown");
+        assertFalse(TarotEffectCalculator.isJudgementTotemReady(t0, t0 + 599_999L, cooldownSec), "Blocked 1ms before expiry");
+        assertTrue(TarotEffectCalculator.isJudgementTotemReady(t0, t0 + 600_000L, cooldownSec), "Ready exactly at cooldown expiry");
+    }
+
 }
