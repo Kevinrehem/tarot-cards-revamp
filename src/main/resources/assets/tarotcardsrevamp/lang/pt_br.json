@@ -45,6 +45,8 @@
     "tarotcardsrevamp.gui.deck.already_present": "O Deck ja contem esta carta!",
     "tarotcardsrevamp.gui.deck.card_upgraded": "Carta aprimorada no Deck para Ascendida: %s!",
     "tarotcardsrevamp.gui.deck.coming_soon": "A interface do Deck de Tarot chega em uma proxima atualizacao!",
+    "tarotcardsrevamp.gui.divination.card_hint": "Coloque a Carta Nao Identificada aqui",
+    "tarotcardsrevamp.gui.divination.lapis_hint": "Requer 4 Lapis-Lazuli",
     "itemGroup.tarotcardsrevamp": "Tarot Cards Revamp",
     "advancements.tarotcardsrevamp.root.title": "A Jornada dos Arcanos",
     "advancements.tarotcardsrevamp.root.description": "Encontre sua primeira Carta de Tarot em uma ruina ou bau esquecido.",

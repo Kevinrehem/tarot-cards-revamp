@@ -45,6 +45,8 @@
     "tarotcardsrevamp.gui.deck.already_present": "The Deck already contains this card!",
     "tarotcardsrevamp.gui.deck.card_upgraded": "Upgraded in Deck to Ascended: %s!",
     "tarotcardsrevamp.gui.deck.coming_soon": "The Tarot Deck GUI is coming in a future update!",
+    "tarotcardsrevamp.gui.divination.card_hint": "Place Unidentified Tarot Card here",
+    "tarotcardsrevamp.gui.divination.lapis_hint": "Requires 4 Lapis Lazuli",
     "itemGroup.tarotcardsrevamp": "Tarot Cards Revamp",
     "advancements.tarotcardsrevamp.root.title": "The Arcana Journey",
     "advancements.tarotcardsrevamp.root.description": "Discover your first Tarot Card in a forgotten ruin or chest.",

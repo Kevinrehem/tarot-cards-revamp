@@ -1,6 +1,7 @@
 package com.tarotcardsrevamp.client.gui;
 
 import com.tarotcardsrevamp.block.menu.DivinationMenu;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -15,6 +16,23 @@ public class DivinationScreen extends AbstractContainerScreen<DivinationMenu> {
         this.titleLabelY = 6;
         this.inventoryLabelX = 8;
         this.inventoryLabelY = 72;
+    }
+
+    @Override
+    protected void extractTooltip(GuiGraphicsExtractor extractor, int mouseX, int mouseY) {
+        super.extractTooltip(extractor, mouseX, mouseY);
+
+        if (this.hoveredSlot != null && !this.hoveredSlot.hasItem()) {
+            if (this.hoveredSlot.index == 0) {
+                Component hint = Component.translatable("tarotcardsrevamp.gui.divination.card_hint")
+                        .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
+                extractor.setTooltipForNextFrame(this.font, hint, mouseX, mouseY);
+            } else if (this.hoveredSlot.index == 1) {
+                Component hint = Component.translatable("tarotcardsrevamp.gui.divination.lapis_hint")
+                        .withStyle(ChatFormatting.BLUE, ChatFormatting.ITALIC);
+                extractor.setTooltipForNextFrame(this.font, hint, mouseX, mouseY);
+            }
+        }
     }
 
     @Override
@@ -40,8 +58,10 @@ public class DivinationScreen extends AbstractContainerScreen<DivinationMenu> {
             int sx = left + slot.x - 1;
             int sy = top + slot.y - 1;
 
-            if (slot.index == 1) { // Result slot highlight (gold border)
+            if (slot.index == 2) { // Result slot highlight (gold border)
                 extractor.fill(sx - 1, sy - 1, sx + 19, sy + 19, 0xFFFFD700);
+            } else if (slot.index == 1) { // Lapis slot highlight (deep blue border)
+                extractor.fill(sx - 1, sy - 1, sx + 19, sy + 19, 0xFF1565C0);
             }
 
             extractor.fill(sx, sy, sx + 18, sy + 18, 0xFF373737);
@@ -49,8 +69,8 @@ public class DivinationScreen extends AbstractContainerScreen<DivinationMenu> {
             extractor.fill(sx + 1, sy + 1, sx + 17, sy + 17, 0xFF8B8B8B);
         }
 
-        // Draw divination rune / arrow indicator between input and output
-        int arrowX = left + 76;
+        // Draw divination rune / arrow indicator between inputs and output
+        int arrowX = left + 86;
         int arrowY = top + 42;
         extractor.fill(arrowX, arrowY - 2, arrowX + 18, arrowY + 4, 0xFF4A148C);
         extractor.fill(arrowX + 2, arrowY - 1, arrowX + 16, arrowY + 3, 0xFFFFD700);

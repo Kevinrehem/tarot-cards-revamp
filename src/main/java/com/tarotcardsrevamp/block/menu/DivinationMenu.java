@@ -19,12 +19,13 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class DivinationMenu extends AbstractContainerMenu {
 
     private final ContainerLevelAccess access;
     private final Player player;
-    private final Container inputContainer = new SimpleContainer(1) {
+    private final Container inputContainer = new SimpleContainer(2) {
         @Override
         public void setChanged() {
             super.setChanged();
@@ -34,6 +35,7 @@ public class DivinationMenu extends AbstractContainerMenu {
     private final Container resultContainer = new SimpleContainer(1);
 
     private static final SmartCardSelector SELECTOR = new SmartCardSelector();
+    public static final int LAPIS_COST = 4;
 
     public DivinationMenu(int containerId, Inventory playerInventory) {
         this(containerId, playerInventory, ContainerLevelAccess.NULL);
@@ -44,16 +46,24 @@ public class DivinationMenu extends AbstractContainerMenu {
         this.access = access;
         this.player = playerInventory.player;
 
-        // Slot 0: Input Slot (only accepts UnidentifiedTarotCardItem)
-        this.addSlot(new Slot(this.inputContainer, 0, 48, 35) {
+        // Slot 0: Card Input Slot (only accepts UnidentifiedTarotCardItem)
+        this.addSlot(new Slot(this.inputContainer, 0, 38, 35) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return stack.getItem() instanceof UnidentifiedTarotCardItem;
             }
         });
 
-        // Slot 1: Result / Revealed Card Slot (take-only slot)
-        this.addSlot(new Slot(this.resultContainer, 0, 112, 35) {
+        // Slot 1: Lapis Lazuli Slot (accepts Lapis Lazuli)
+        this.addSlot(new Slot(this.inputContainer, 1, 62, 35) {
+            @Override
+            public boolean mayPlace(ItemStack stack) {
+                return stack.is(Items.LAPIS_LAZULI);
+            }
+        });
+
+        // Slot 2: Result / Revealed Card Slot (take-only slot)
+        this.addSlot(new Slot(this.resultContainer, 0, 116, 35) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return false;
@@ -63,14 +73,27 @@ public class DivinationMenu extends AbstractContainerMenu {
             public void onTake(Player player, ItemStack stack) {
                 super.onTake(player, stack);
 
-                // Consume 1 card from input slot
-                ItemStack input = inputContainer.getItem(0);
-                if (!input.isEmpty()) {
-                    input.shrink(1);
-                    inputContainer.setItem(0, input);
+                // 1. Clear the stored divination offer FIRST so any subsequent roll gets a fresh card
+                player.setData(ModAttachmentTypes.DIVINATION_OFFER, -1);
+
+                // 2. Consume 1 card from input slot 0
+                ItemStack cardInput = inputContainer.getItem(0);
+                if (!cardInput.isEmpty()) {
+                    cardInput.shrink(1);
+                    inputContainer.setItem(0, cardInput);
                 }
 
-                // Sound & particle feedback
+                // 3. Consume 4 lapis lazuli from lapis slot 1
+                ItemStack lapisInput = inputContainer.getItem(1);
+                if (!lapisInput.isEmpty()) {
+                    lapisInput.shrink(LAPIS_COST);
+                    inputContainer.setItem(1, lapisInput);
+                }
+
+                // 4. Clear the result slot immediately
+                resultContainer.setItem(0, ItemStack.EMPTY);
+
+                // 5. Sound & particle feedback
                 access.execute((level, pos) -> {
                     level.playSound(null, pos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1.0F, 1.1F);
                     level.playSound(null, pos, SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 0.6F, 1.5F);
@@ -81,22 +104,19 @@ public class DivinationMenu extends AbstractContainerMenu {
                     }
                 });
 
-                // The card was divined! Clear the stored offer so a new card will be generated next
-                player.setData(ModAttachmentTypes.DIVINATION_OFFER, -1);
-
-                // Trigger next divination if more cards remain in input
+                // 6. Trigger next divination immediately if remaining cards and lapis are present
                 updateResult();
             }
         });
 
-        // Player Inventory (3 rows of 9)
+        // Player Inventory (3 rows of 9) - Slots 3 to 29
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
                 this.addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 84 + row * 18));
             }
         }
 
-        // Player Hotbar (9 slots)
+        // Player Hotbar (9 slots) - Slots 30 to 38
         for (int col = 0; col < 9; ++col) {
             this.addSlot(new Slot(playerInventory, col, 8 + col * 18, 142));
         }
@@ -114,8 +134,13 @@ public class DivinationMenu extends AbstractContainerMenu {
             return;
         }
 
-        ItemStack input = this.inputContainer.getItem(0);
-        if (input.isEmpty() || !(input.getItem() instanceof UnidentifiedTarotCardItem)) {
+        ItemStack cardInput = this.inputContainer.getItem(0);
+        ItemStack lapisInput = this.inputContainer.getItem(1);
+
+        boolean hasCard = !cardInput.isEmpty() && cardInput.getItem() instanceof UnidentifiedTarotCardItem;
+        boolean hasLapis = !lapisInput.isEmpty() && lapisInput.is(Items.LAPIS_LAZULI) && lapisInput.getCount() >= LAPIS_COST;
+
+        if (!hasCard || !hasLapis) {
             this.resultContainer.setItem(0, ItemStack.EMPTY);
         } else {
             if (this.resultContainer.getItem(0).isEmpty()) {
@@ -153,26 +178,30 @@ public class DivinationMenu extends AbstractContainerMenu {
             ItemStack current = slot.getItem();
             itemstack = current.copy();
 
-            if (index == 1) { // Taking from result slot
-                if (!this.moveItemStackTo(current, 2, 38, true)) {
+            if (index == 2) { // Taking from result slot
+                if (!this.moveItemStackTo(current, 3, 39, true)) {
                     return ItemStack.EMPTY;
                 }
                 slot.onQuickCraft(current, itemstack);
-            } else if (index == 0) { // Moving from input slot to inventory
-                if (!this.moveItemStackTo(current, 2, 38, false)) {
+            } else if (index == 0 || index == 1) { // Moving from table input slots to inventory
+                if (!this.moveItemStackTo(current, 3, 39, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else { // Moving from inventory to table
+            } else { // Moving from inventory (index 3 to 38) into table
                 if (current.getItem() instanceof UnidentifiedTarotCardItem) {
                     if (!this.moveItemStackTo(current, 0, 1, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (index >= 2 && index < 29) { // Main inventory to hotbar
-                    if (!this.moveItemStackTo(current, 29, 38, false)) {
+                } else if (current.is(Items.LAPIS_LAZULI)) {
+                    if (!this.moveItemStackTo(current, 1, 2, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (index >= 29 && index < 38) { // Hotbar to main inventory
-                    if (!this.moveItemStackTo(current, 2, 29, false)) {
+                } else if (index >= 3 && index < 30) { // Main inventory to hotbar
+                    if (!this.moveItemStackTo(current, 30, 39, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (index >= 30 && index < 39) { // Hotbar to main inventory
+                    if (!this.moveItemStackTo(current, 3, 30, false)) {
                         return ItemStack.EMPTY;
                     }
                 }
